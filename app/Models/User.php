@@ -24,6 +24,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     |-------------------------------------
     */
     protected $fillable = [
+        'dodid',
         'name',
         'first_name',
         'last_name',
@@ -31,6 +32,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'email',
         'password',
         'avatar',
+        'phone_numbers',
+        'emails',
     ];
 
     protected $hidden = [
@@ -43,6 +46,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'phone_numbers' => 'array',
+            'emails' => 'array',
         ];
     }
 

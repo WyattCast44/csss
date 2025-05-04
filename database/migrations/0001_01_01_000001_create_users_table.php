@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->ulid('ulid')->index();
+            $table->string('dodid')->unique()->index();
             $table->string('name'); // basically display name
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
@@ -19,6 +20,11 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->string('avatar')->nullable();
+
+            // Contact Information
+            $table->json('phone_numbers')->nullable();
+            $table->json('emails')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

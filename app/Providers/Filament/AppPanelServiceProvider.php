@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\EditProfile;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
@@ -114,7 +115,7 @@ class AppPanelServiceProvider extends PanelProvider
             ->registration()
             ->passwordReset()
             ->emailVerification()
-            ->profile();
+            ->profile(EditProfile::class, isSimple: false);
 
         return $this;
     }
@@ -164,7 +165,7 @@ class AppPanelServiceProvider extends PanelProvider
 
     private function configureDeveloperTools(Panel $panel): self
     {
-        if (!app()->environment('local')) {
+        if (! app()->environment('local')) {
             return $this;
         }
 

@@ -26,9 +26,9 @@ return new class extends Migration
             $table->json('physical_addresses')->nullable();
 
             // Contact Information
-            $table->json('emails')->nullable();
+            $table->string('email');
             $table->json('phone_numbers')->nullable();
-            
+
             // Misc
             $table->string('avatar')->nullable(); // example: https://example.com/logo.png
 

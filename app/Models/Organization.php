@@ -2,14 +2,19 @@
 
 namespace App\Models;
 
+use App\Support\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 
 class Organization extends Model
 {
     /** @use HasFactory<\Database\Factories\OrganizationFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes, Notifiable;
+
+    use HasUlids;
 
     /*
     |-------------------------------------
@@ -24,7 +29,7 @@ class Organization extends Model
         'pas_code',
         'mailing_addresses',
         'physical_addresses',
-        'emails',
+        'email',
         'phone_numbers',
         'avatar',
         'approved',
