@@ -45,3 +45,18 @@ php artisan migrate:fresh --seed
 ```bash
 yarn dev
 ```
+
+# Production Deployment Considerations
+
+- Enable OP-Cache
+
+
+```bash
+# clear old optimizations
+php artisan filament:optimize-clear
+php artisan optimize:clear
+
+# optimize
+php artisan optimize
+php artisan filament:optimize
+```

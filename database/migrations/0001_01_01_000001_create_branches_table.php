@@ -38,9 +38,9 @@ return new class extends Migration
 
         foreach ($branches as $branch) {
             DB::table('branches')->insert(array_merge($branch, [
-                // only have to do this because we're using the DB facade 
+                // only have to do this because we're using the DB facade
                 // and not Eloquent. Normally auto-generated ULIDs are used.
-                'ulid' => str()->ulid(), 
+                'ulid' => str()->ulid(),
             ]));
         }
     }

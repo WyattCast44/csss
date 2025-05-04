@@ -11,12 +11,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\CausesActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
+    use CausesActivity, LogsActivity;
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
-
     use HasUlids;
 
     /*
@@ -56,6 +60,16 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     /*
     |-------------------------------------
+    | Activity Log Configuration
+    |-------------------------------------
+    */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logFillable();
+    }
+
+    /*
+    |-------------------------------------
     | Filament Configuration
     |-------------------------------------
     */
@@ -72,5 +86,5 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
-    }    
+    }
 }
