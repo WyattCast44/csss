@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
@@ -35,6 +37,8 @@ class AppServiceProvider extends ServiceProvider
     private function configureMorphMaps(): self
     {
         Relation::enforceMorphMap([
+            'branch' => Branch::class,
+            'organization' => Organization::class,
             'user' => User::class,
         ]);
 

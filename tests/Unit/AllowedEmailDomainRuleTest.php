@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Validator;
 
 function validateEmail($email): \Illuminate\Validation\Validator
 {
-    return Validator::make(['email' => $email], ['email' => new AllowedEmailDomain()]);
+    return Validator::make(['email' => $email], ['email' => new AllowedEmailDomain]);
 }
 
 test('it passes with a valid us.af.mil email', function () {

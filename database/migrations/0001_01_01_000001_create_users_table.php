@@ -25,6 +25,9 @@ return new class extends Migration
             $table->json('phone_numbers')->nullable();
             $table->json('emails')->nullable();
 
+            // military information
+            $table->foreignId('branch_id')->nullable()->constrained();
+
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 class Organization extends Model
 {
     /** @use HasFactory<\Database\Factories\OrganizationFactory> */
-    use HasFactory, SoftDeletes, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     use HasUlids;
 

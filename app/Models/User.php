@@ -7,6 +7,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -34,6 +35,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'avatar',
         'phone_numbers',
         'emails',
+        'branch_id',
     ];
 
     protected $hidden = [
@@ -48,6 +50,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             'password' => 'hashed',
             'phone_numbers' => 'array',
             'emails' => 'array',
+            'branch_id' => 'integer',
         ];
     }
 
@@ -60,4 +63,14 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     {
         return true;
     }
+
+    /*
+    |-------------------------------------
+    | Relationships
+    |-------------------------------------
+    */
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }    
 }

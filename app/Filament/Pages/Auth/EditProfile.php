@@ -4,6 +4,7 @@ namespace App\Filament\Pages\Auth;
 
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Auth\EditProfile as BaseEditProfile;
@@ -27,6 +28,7 @@ class EditProfile extends BaseEditProfile
             ->readOnly()
             ->required();
     }
+
     protected function getFirstNameFormComponent(): Component
     {
         return TextInput::make('first_name')
@@ -76,16 +78,24 @@ class EditProfile extends BaseEditProfile
     protected function getPhoneNumbersFormComponent(): Component
     {
         return Repeater::make('phone_numbers')
-                ->addActionLabel('Add phone number')
-                ->columns(2)
-                ->schema([
-                    TextInput::make('label')->required(),
-                    TextInput::make('phone_number')->required(),
-                ])
-                ->collapsible()
-                ->reorderableWithButtons();
+            ->addActionLabel('Add phone number')
+            ->columns(2)
+            ->schema([
+                TextInput::make('label')->required(),
+                TextInput::make('phone_number')->required(),
+            ])
+            ->collapsible()
+            ->reorderableWithButtons();
     }
-    
+
+    protected function getBranchFormComponent(): Component
+    {
+        return Select::make('branch_id')
+            ->label('Branch')
+            ->relationship(name: 'branch', titleAttribute: 'name')
+            ->required();
+    }
+
     public function form(Form $form): Form
     {
         return $form
@@ -97,6 +107,7 @@ class EditProfile extends BaseEditProfile
                 $this->getLastNameFormComponent(),
                 $this->getMiddleNameFormComponent(),
                 $this->getNameFormComponent(),
+                $this->getBranchFormComponent(),
                 $this->getEmailsFormComponent(),
                 $this->getPhoneNumbersFormComponent(),
             ]);
