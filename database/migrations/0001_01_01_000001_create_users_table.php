@@ -28,6 +28,10 @@ return new class extends Migration
             // military information
             $table->foreignId('branch_id')->nullable()->constrained();
 
+            // organization information
+            $table->foreignId('personal_organization_id')->nullable();
+            $table->foreignId('current_organization_id')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

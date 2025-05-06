@@ -43,7 +43,15 @@ class OrganizationFactory extends Factory
             'email' => fake()->email(),
             'phone_numbers' => fake()->boolean() ? $phones : null,
             'avatar' => fake()->imageUrl(),
+            'personal' => false,
             'approved' => fake()->boolean(),
         ];
+    }
+
+    public function personal(): Factory
+    {
+        return $this->state(fn (array $attributes) => [
+            'personal' => true,
+        ]);
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Branch;
+use App\Models\GlobalTraining;
 use App\Models\Organization;
+use App\Models\TrainingFormat;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
@@ -37,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
     private function configureMorphMaps(): self
     {
         Relation::enforceMorphMap([
+            'training_format' => TrainingFormat::class,
+            'global_training' => GlobalTraining::class,
             'branch' => Branch::class,
             'organization' => Organization::class,
             'user' => User::class,

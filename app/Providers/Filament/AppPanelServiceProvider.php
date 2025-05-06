@@ -3,6 +3,10 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\EditProfile;
+use App\Filament\Pages\Tenancy\CreateOrganizationPage;
+use App\Filament\Pages\Tenancy\EditOrganizationPage;
+use App\Http\Middleware\ApplyTenantScopes;
+use App\Models\Organization;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
@@ -55,10 +59,7 @@ class AppPanelServiceProvider extends PanelProvider
             ->default()
             ->id('app')
             ->path('app')
-            ->spa()
-            ->favicon(asset('logo-dark.png'))
-            ->brandLogo(asset('logo-dark.png'))
-            ->brandLogoHeight('3rem');
+            ->spa();
 
         return $this;
     }
@@ -92,7 +93,11 @@ class AppPanelServiceProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Blue,
                 'danger' => Color::Rose,
-            ]);
+            ])
+            ->favicon(asset('logo-dark.png'))
+            ->brandLogo(fn () => view('filament.logos.light'))
+            ->darkModeBrandLogo(fn () => view('filament.logos.dark'))
+            ->brandLogoHeight('2rem');
 
         return $this;
     }
@@ -122,13 +127,13 @@ class AppPanelServiceProvider extends PanelProvider
 
     private function configureTenancy(Panel $panel): self
     {
-        // $panel
-        //     ->tenant(Team::class)
-        //     ->tenantRegistration(CreateTeamPage::class)
-        //     ->tenantProfile(EditTeamPage::class)
-        //     ->tenantMiddleware([
-        //         ApplyTenantScopes::class,
-        //     ], isPersistent: true);
+        $panel
+            ->tenant(Organization::class)
+            ->tenantRegistration(CreateOrganizationPage::class)
+            ->tenantProfile(EditOrganizationPage::class)
+            ->tenantMiddleware([
+                ApplyTenantScopes::class,
+            ], isPersistent: true);
 
         return $this;
     }

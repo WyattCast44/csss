@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->ulid('ulid')->index();
+
             // General Information
             $table->string('name')->index(); // example: 15th Test And Evaluation Squadron
             $table->string('abbr')->index(); // example: 15TES
@@ -26,11 +27,12 @@ return new class extends Migration
             $table->json('physical_addresses')->nullable();
 
             // Contact Information
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->json('phone_numbers')->nullable();
 
             // Misc
-            $table->string('avatar')->nullable(); // example: https://example.com/logo.png
+            $table->string('avatar')->nullable();
+            $table->boolean('personal')->default(false);
 
             // Approval
             $table->boolean('approved')->default(false);

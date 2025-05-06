@@ -33,6 +33,7 @@ class Organization extends Model
         'phone_numbers',
         'avatar',
         'approved',
+        'personal',
     ];
 
     protected $casts = [
@@ -41,6 +42,7 @@ class Organization extends Model
         'emails' => 'array',
         'phone_numbers' => 'array',
         'approved' => 'boolean',
+        'personal' => 'boolean',
     ];
 
     /*
