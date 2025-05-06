@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Filament\Models\Contracts\HasTenants;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -19,4 +20,8 @@ test('user password is hashed', function () {
 
 test('the user model uses the activity logging traits', function () {
     expect(User::class)->toUseTraits([LogsActivity::class, CausesActivity::class]);
+});
+
+test('the user model implements the HasTenants contract', function () {
+    expect(User::class)->toImplement(HasTenants::class);
 });

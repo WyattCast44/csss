@@ -120,7 +120,7 @@ class AppPanelServiceProvider extends PanelProvider
             ->registration()
             ->passwordReset()
             ->emailVerification()
-            ->profile(EditProfile::class, isSimple: false);
+            ->profile(EditProfile::class, isSimple: true);
 
         return $this;
     }

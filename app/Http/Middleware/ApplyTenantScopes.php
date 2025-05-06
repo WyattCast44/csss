@@ -17,11 +17,11 @@ class ApplyTenantScopes
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $currentTeam = Filament::getTenant();
+        $currentOrganization = Filament::getTenant();
 
-        // User::addGlobalScope('currentTeam', function (Builder $query) use ($currentTeam) {
-        //     $query->whereHas('teams', function (Builder $query) use ($currentTeam) {
-        //         $query->where('team_id', $currentTeam->id);
+        // User::addGlobalScope('currentOrganization', function (Builder $query) use ($currentOrganization) {
+        //     $query->whereHas('organizations', function (Builder $query) use ($currentOrganization) {
+        //         $query->where('organization_id', $currentOrganization->id);
         //     });
         // });
 

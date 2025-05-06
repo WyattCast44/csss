@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,7 +19,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class User extends Authenticatable implements FilamentUser, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasTenants, MustVerifyEmail
 {
     use CausesActivity, LogsActivity;
 
@@ -103,6 +104,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return true;
     }
 
+    public function getDefaultTenant(Panel $panel): ?Model
+    {
+        return $this->personalOrganization;
+    }
+
     /*
     |-------------------------------------
     | Relationships
@@ -126,7 +132,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function organizations(): BelongsToMany
     {
-        return $this->belongsToMany(Organization::class, 'organization_user');
+        return $this->belongsToMany(Organization::class)->withTimestamps();
     }
 
     public function personalOrganization(): BelongsTo
@@ -156,6 +162,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             'personal_organization_id' => $organization->id,
             'current_organization_id' => $organization->id,
         ]);
+
+        $this->organizations()->attach($organization);
 
         return $organization;
     }
