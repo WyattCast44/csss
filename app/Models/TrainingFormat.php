@@ -21,7 +21,7 @@ class TrainingFormat extends Model
     */
     protected $fillable = [
         'name',
-        'slug',
+        'abbr',
         'description',
     ];
 }

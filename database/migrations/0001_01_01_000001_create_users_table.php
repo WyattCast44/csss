@@ -27,6 +27,8 @@ return new class extends Migration
 
             // military information
             $table->foreignId('branch_id')->nullable()->constrained();
+            $table->foreignId('rank_id')->nullable()->constrained();
+            $table->string('job_duty_code')->nullable(); // afsc, mos, etc.
 
             // organization information
             $table->foreignId('personal_organization_id')->nullable();

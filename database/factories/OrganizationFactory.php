@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,35 +18,21 @@ class OrganizationFactory extends Factory
      */
     public function definition(): array
     {
-        $phones = [
-            'main' => fake()->phoneNumber(),
-            'alternate' => fake()->phoneNumber(),
-            'fax' => fake()->phoneNumber(),
-        ];
-
-        $mailingAddresses = [
-            'main' => fake()->address(),
-            'alternate' => fake()->address(),
-        ];
-
-        $physicalAddresses = [
-            'main' => fake()->address(),
-            'alternate' => fake()->address(),
-        ];
-
         return [
             'name' => fake()->company(),
             'abbr' => fake()->word(),
             'slug' => fake()->slug(),
             'description' => fake()->sentence(),
             'pas_code' => fake()->word(),
-            'mailing_addresses' => fake()->boolean() ? $mailingAddresses : null,
-            'physical_addresses' => fake()->boolean() ? $physicalAddresses : null,
+            'mailing_addresses' => null,
+            'physical_addresses' => null,
             'email' => fake()->email(),
-            'phone_numbers' => fake()->boolean() ? $phones : null,
-            'avatar' => fake()->imageUrl(),
+            'phone_numbers' => null,
+            'avatar' => null,
             'personal' => false,
             'approved' => fake()->boolean(),
+            'parent_id' => fake()->boolean() ? Organization::factory() : null,
+            'branch_id' => Branch::inRandomOrder()->first()->id,
         ];
     }
 
@@ -52,6 +40,27 @@ class OrganizationFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'personal' => true,
+        ]);
+    }
+
+    public function approved(): Factory
+    {
+        return $this->state(fn (array $attributes) => [
+            'approved' => true,
+        ]);
+    }
+
+    public function forBranch(Branch $branch): Factory
+    {
+        return $this->state(fn (array $attributes) => [
+            'branch_id' => $branch->id,
+        ]);
+    }
+
+    public function forParent(Organization $parent): Factory
+    {
+        return $this->state(fn (array $attributes) => [
+            'parent_id' => $parent->id,
         ]);
     }
 }

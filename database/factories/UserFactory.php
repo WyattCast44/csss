@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Branch;
+use App\Models\Rank;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -33,6 +34,8 @@ class UserFactory extends Factory
             'phone_numbers' => null,
             'emails' => null,
             'branch_id' => Branch::query()->inRandomOrder()->first()->id,
+            'rank_id' => Rank::query()->inRandomOrder()->first()->id,
+            'job_duty_code' => str(str()->random(6))->upper(),
             'remember_token' => Str::random(10),
         ];
     }
@@ -48,6 +51,20 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'branch_id' => $branch->id,
+        ]);
+    }
+
+    public function withRank(Rank $rank): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'rank_id' => $rank->id,
+        ]);
+    }
+
+    public function withJobDutyCode(string $jobDutyCode): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'job_duty_code' => $jobDutyCode,
         ]);
     }
 }

@@ -41,6 +41,8 @@ return new class extends Migration
                 // only have to do this because we're using the DB facade
                 // and not Eloquent. Normally auto-generated ULIDs are used.
                 'ulid' => str()->ulid(),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]));
         }
     }

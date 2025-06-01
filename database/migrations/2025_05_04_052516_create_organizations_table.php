@@ -30,6 +30,10 @@ return new class extends Migration
             // Misc
             $table->string('avatar')->nullable();
             $table->boolean('personal')->default(false);
+            $table->foreignId('branch_id')->nullable()->constrained('branches');
+
+            // Parent Organization
+            $table->foreignId('parent_id')->nullable()->constrained('organizations');
 
             // Approval
             $table->boolean('approved')->default(false);

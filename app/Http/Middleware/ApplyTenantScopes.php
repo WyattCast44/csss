@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\InboundUser;
 use Closure;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,6 +25,10 @@ class ApplyTenantScopes
         //         $query->where('organization_id', $currentOrganization->id);
         //     });
         // });
+
+        InboundUser::addGlobalScope('currentOrganization', function (Builder $query) use ($currentOrganization) {
+            $query->where('organization_id', $currentOrganization->id);
+        });
 
         return $next($request);
     }

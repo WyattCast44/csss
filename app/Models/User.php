@@ -7,6 +7,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -45,6 +46,8 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
         'phone_numbers',
         'emails',
         'branch_id',
+        'rank_id',
+        'job_duty_code',
         'personal_organization_id',
         'current_organization_id',
     ];
@@ -62,10 +65,15 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
             'phone_numbers' => 'array',
             'emails' => 'array',
             'branch_id' => 'integer',
+            'rank_id' => 'integer',
             'personal_organization_id' => 'integer',
             'current_organization_id' => 'integer',
         ];
     }
+
+    protected $appends = [
+        'display_name',
+    ];
 
     protected static function booted(): void
     {
@@ -74,14 +82,28 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
         });
     }
 
-    /*
-    |-------------------------------------
-    | Activity Log Configuration
-    |-------------------------------------
-    */
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logFillable();
+    }
+
+    /*
+    |-------------------------------------
+    | Accessors
+    |-------------------------------------
+    */
+    protected function displayName(): Attribute
+    {
+        // format is last name, first name middle initial
+        $displayName = $this->attributes['last_name'].', '.$this->attributes['first_name'];
+
+        if ($this->attributes['middle_name']) {
+            $displayName .= ' '.$this->attributes['middle_name'][0].'.';
+        }
+
+        return Attribute::make(
+            get: fn () => $displayName,
+        )->shouldCache();
     }
 
     /*
@@ -101,12 +123,25 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        if ($panel->getId() === 'app') {
+            return true;
+        }
+
+        if ($panel->getId() === 'admin') {
+            return $this->isAdmin();
+        }
+
+        return false;
     }
 
     public function getDefaultTenant(Panel $panel): ?Model
     {
         return $this->personalOrganization;
+    }
+
+    public function isAdmin(): bool
+    {
+        return true;
     }
 
     /*
@@ -140,6 +175,11 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
         return $this->belongsTo(Organization::class, 'personal_organization_id');
     }
 
+    public function rank(): BelongsTo
+    {
+        return $this->belongsTo(Rank::class);
+    }
+
     /*
     |-------------------------------------
     | Private Methods
@@ -147,12 +187,16 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     */
     private function createPersonalOrganization(): Organization
     {
-        $name = $this->last_name ? $this->last_name : $this->first_name ?? $this->name;
+        $name = $this->first_name ? $this->first_name : $this->last_name ?? $this->name;
+
+        $teamName = $name.'\'s Personal Organization';
+        $teamAbbr = $name.'\'s Org';
+        $teamSlug = str($teamName)->slug();
 
         $organization = Organization::create([
-            'name' => $name.'\'s Organization',
-            'abbr' => $name.'\'s Org',
-            'slug' => str($name.'\'s Organization')->slug(),
+            'name' => $teamName,
+            'abbr' => $teamAbbr,
+            'slug' => $teamSlug,
             'description' => 'This is your personal organization. It is used to store your personal information.',
             'personal' => true,
             'approved' => true,

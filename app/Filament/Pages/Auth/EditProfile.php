@@ -3,6 +3,7 @@
 namespace App\Filament\Pages\Auth;
 
 use Filament\Forms\Components\Component;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -14,7 +15,7 @@ class EditProfile extends BaseEditProfile
     protected function getDodidFormComponent(): Component
     {
         return TextInput::make('dodid')
-            ->label('DOD ID')
+            ->label('DoD ID')
             ->disabled()
             ->readOnly()
             ->required();
@@ -96,18 +97,32 @@ class EditProfile extends BaseEditProfile
             ->required();
     }
 
+    protected function getRankFormComponent(): Component
+    {
+        return Select::make('rank_id')
+            ->label('Rank')
+            ->relationship(name: 'rank', titleAttribute: 'name')
+            ->required();
+    }
+
     public function form(Form $form): Form
     {
         return $form
-            ->columns(2)
             ->schema([
                 $this->getDodidFormComponent(),
                 $this->getEmailFormComponent(),
-                $this->getFirstNameFormComponent(),
-                $this->getLastNameFormComponent(),
-                $this->getMiddleNameFormComponent(),
-                $this->getNameFormComponent(),
-                $this->getBranchFormComponent(),
+                Grid::make(2)
+                    ->schema([
+                        $this->getFirstNameFormComponent(),
+                        $this->getMiddleNameFormComponent(),
+                        $this->getLastNameFormComponent(),
+                        $this->getNameFormComponent(),
+                    ]),
+                Grid::make(2)
+                    ->schema([
+                        $this->getBranchFormComponent(),
+                        $this->getRankFormComponent(),
+                    ]),
                 $this->getEmailsFormComponent(),
                 $this->getPhoneNumbersFormComponent(),
             ]);

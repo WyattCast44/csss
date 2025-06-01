@@ -17,7 +17,6 @@ class GlobalTraining extends Model
     use HasFactory, SoftDeletes;
 
     use HasUlids;
-
     use LogsActivity;
 
     /*

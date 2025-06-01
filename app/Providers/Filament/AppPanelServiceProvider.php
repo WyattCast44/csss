@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\EditProfile;
+use App\Filament\Pages\Auth\Register;
 use App\Filament\Pages\Tenancy\CreateOrganizationPage;
 use App\Filament\Pages\Tenancy\EditOrganizationPage;
 use App\Http\Middleware\ApplyTenantScopes;
@@ -117,7 +118,7 @@ class AppPanelServiceProvider extends PanelProvider
     {
         $panel
             ->login()
-            ->registration()
+            ->registration(Register::class)
             ->passwordReset()
             ->emailVerification()
             ->profile(EditProfile::class, isSimple: true);

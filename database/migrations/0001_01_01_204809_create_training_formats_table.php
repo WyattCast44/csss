@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->ulid('ulid')->unique()->index();
             $table->string('name');
-            $table->string('slug');
+            $table->string('abbr');
             $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -30,37 +30,37 @@ return new class extends Migration
         $formats = [
             [
                 'name' => 'In Person',
-                'slug' => 'in-person',
+                'abbr' => 'IN-PER',
                 'description' => 'In Person Training',
             ],
             [
                 'name' => 'Virtual',
-                'slug' => 'virtual',
+                'abbr' => 'VIRT',
                 'description' => 'Virtual Training',
             ],
             [
                 'name' => 'Computer-Based Training',
-                'slug' => 'cbt',
+                'abbr' => 'CBT',
                 'description' => 'Computer-Based Training',
             ],
             [
                 'name' => 'On-the-Job Training',
-                'slug' => 'ojt',
+                'abbr' => 'OJT',
                 'description' => 'On-the-Job Training',
             ],
             [
                 'name' => 'In-House Training',
-                'slug' => 'in-house',
+                'abbr' => 'IN-HOUSE',
                 'description' => 'In-House Training',
             ],
             [
                 'name' => 'Other',
-                'slug' => 'other',
+                'abbr' => 'OTHER',
                 'description' => 'Other Training',
             ],
             [
                 'name' => 'Formal Training',
-                'slug' => 'formal-training',
+                'abbr' => 'FT',
                 'description' => 'Formal Training',
             ],
         ];

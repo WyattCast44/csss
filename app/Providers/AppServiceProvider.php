@@ -4,7 +4,10 @@ namespace App\Providers;
 
 use App\Models\Branch;
 use App\Models\GlobalTraining;
+use App\Models\InboundUser;
+use App\Models\InprocessingAction;
 use App\Models\Organization;
+use App\Models\Rank;
 use App\Models\TrainingFormat;
 use App\Models\User;
 use Carbon\CarbonImmutable;
@@ -44,6 +47,9 @@ class AppServiceProvider extends ServiceProvider
             'branch' => Branch::class,
             'organization' => Organization::class,
             'user' => User::class,
+            'rank' => Rank::class,
+            'inbound_user' => InboundUser::class,
+            'inprocessing_action' => InprocessingAction::class,
         ]);
 
         return $this;
