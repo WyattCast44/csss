@@ -14,9 +14,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class GlobalTraining extends Model
 {
     /** @use HasFactory<\Database\Factories\GlobalTrainingFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasUlids, SoftDeletes;
 
-    use HasUlids;
     use LogsActivity;
 
     /*
@@ -45,11 +44,6 @@ class GlobalTraining extends Model
         'frequency' => TrainingFrequency::class,
     ];
 
-    /*
-    |-------------------------------------
-    | Activity Log Configuration
-    |-------------------------------------
-    */
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logFillable();

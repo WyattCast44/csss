@@ -25,9 +25,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     use CausesActivity, LogsActivity;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
-
-    use HasUlids;
+    use HasFactory, HasUlids, Notifiable, SoftDeletes;
 
     /*
     |-------------------------------------
@@ -94,7 +92,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     */
     protected function displayName(): Attribute
     {
-        // format is last name, first name middle initial
         $displayName = $this->attributes['last_name'].', '.$this->attributes['first_name'];
 
         if ($this->attributes['middle_name']) {

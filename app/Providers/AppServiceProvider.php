@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Branch;
 use App\Models\GlobalTraining;
 use App\Models\InboundUser;
+use App\Models\InboundUserInprocessingAction;
 use App\Models\InprocessingAction;
 use App\Models\Organization;
 use App\Models\Rank;
@@ -50,6 +51,7 @@ class AppServiceProvider extends ServiceProvider
             'rank' => Rank::class,
             'inbound_user' => InboundUser::class,
             'inprocessing_action' => InprocessingAction::class,
+            'inbound_user_inprocessing_action' => InboundUserInprocessingAction::class,
         ]);
 
         return $this;

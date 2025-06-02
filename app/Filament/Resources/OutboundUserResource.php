@@ -2,40 +2,52 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\InprocessingActionResource\Pages;
-use App\Models\InprocessingAction;
+use App\Filament\Resources\OutboundUserResource\Pages;
+use App\Models\OutboundUser;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class InprocessingActionResource extends Resource
+class OutboundUserResource extends Resource
 {
-    protected static ?string $model = InprocessingAction::class;
+    protected static ?string $model = OutboundUser::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+    protected static ?string $navigationIcon = 'heroicon-o-user-minus';
 
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationGroup = 'Members';
+
+    protected static ?string $navigationLabel = 'Outbound';
+
+    protected static ?string $modelLabel = 'Outbound Member';
+
+    protected static ?int $navigationSort = 3;
+
+    protected static bool $isScopedToTenant = false;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name')
+                TextInput::make('organization_id')
                     ->required()
-                    ->maxLength(255),
-                TextInput::make('description')
-                    ->maxLength(255),
-                TextInput::make('category')
-                    ->maxLength(255),
-                Toggle::make('active')
+                    ->numeric(),
+                Select::make('user_id')
+                    ->relationship('user', 'name')
                     ->required(),
+                DatePicker::make('losing_date'),
+                Select::make('gaining_organization_id')
+                    ->relationship('gainingOrganization', 'name')
+                    ->required(),
+                Textarea::make('notes')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -43,23 +55,18 @@ class InprocessingActionResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
-                TextColumn::make('category')
+                TextColumn::make('user.display_name')
                     ->sortable()
                     ->searchable()
                     ->toggleable(),
-                TextColumn::make('description')
+                TextColumn::make('losing_date')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('gainingOrganization.name')
+                    ->sortable()
                     ->searchable()
-                    ->toggleable()
-                    ->wrap()
-                    ->limit(50),
-                IconColumn::make('active')
-                    ->boolean()
-                    ->toggleable()
-                    ->sortable(),
+                    ->toggleable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -98,9 +105,9 @@ class InprocessingActionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListInprocessingActions::route('/'),
-            'create' => Pages\CreateInprocessingAction::route('/create'),
-            'edit' => Pages\EditInprocessingAction::route('/{record}/edit'),
+            'index' => Pages\ListOutboundUsers::route('/'),
+            'create' => Pages\CreateOutboundUser::route('/create'),
+            'edit' => Pages\EditOutboundUser::route('/{record}/edit'),
         ];
     }
 

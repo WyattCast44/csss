@@ -6,6 +6,7 @@ use App\Support\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -13,9 +14,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class InprocessingAction extends Model
 {
     /** @use HasFactory<\Database\Factories\InprocessingActionFactory> */
-    use HasFactory, SoftDeletes;
-
-    use HasUlids;
+    use HasFactory, HasUlids, SoftDeletes;
 
     use LogsActivity;
 
@@ -50,5 +49,13 @@ class InprocessingAction extends Model
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
+    }
+
+    public function inboundUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(InboundUser::class)
+            ->using(InboundUserInprocessingAction::class)
+            ->withPivot(['completed', 'completed_at', 'completed_by_id', 'notes', 'inprocessing_organization_id'])
+            ->withTimestamps();
     }
 }

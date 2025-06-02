@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\InboundUser;
+use App\Models\User;
 use Closure;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;

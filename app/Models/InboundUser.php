@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Spatie\Activitylog\LogOptions;
@@ -15,9 +16,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class InboundUser extends Model
 {
     /** @use HasFactory<\Database\Factories\InboundUserFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasUlids, SoftDeletes;
 
-    use HasUlids;
     use LogsActivity;
 
     /*
@@ -41,6 +41,13 @@ class InboundUser extends Model
     protected $appends = [
         'days_until_report',
     ];
+
+    protected static function booted(): void
+    {
+        static::created(function (InboundUser $inboundUser) {
+            $inboundUser->assignActiveInprocessingActions();
+        });
+    }
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -90,5 +97,34 @@ class InboundUser extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function inprocessingActions(): BelongsToMany
+    {
+        return $this->belongsToMany(InprocessingAction::class)
+            ->using(InboundUserInprocessingAction::class)
+            ->withPivot(['completed', 'completed_at', 'completed_by_id', 'notes', 'inprocessing_organization_id'])
+            ->withTimestamps();
+    }
+
+    public function completedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'completed_by_id');
+    }
+
+    /*
+    |-------------------------------------
+    | Private Methods
+    |-------------------------------------
+    */
+    private function assignActiveInprocessingActions(): void
+    {
+        $activeActions = $this->organization->inprocessingActions()
+            ->where('active', true)
+            ->get();
+
+        $this->inprocessingActions()->attach($activeActions, [
+            'inprocessing_organization_id' => $this->organization_id,
+        ]);
     }
 }

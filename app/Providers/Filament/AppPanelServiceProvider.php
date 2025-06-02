@@ -14,6 +14,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -161,9 +162,10 @@ class AppPanelServiceProvider extends PanelProvider
     private function configureNavigationGroups(Panel $panel): self
     {
         $panel->navigationGroups([
-            // NavigationGroup::make()
-            //     ->label('Finance')
-            //     ->icon('heroicon-o-banknotes'),
+            NavigationGroup::make()
+                ->label('Members'),
+            NavigationGroup::make()
+                ->label('Settings'),
         ]);
 
         return $this;

@@ -38,6 +38,8 @@ class DatabaseSeeder extends Seeder
             'approved' => true,
         ]);
 
+        InprocessingAction::factory(10)->forOrganization($organization)->create();
+
         $user->organizations()->attach($organization);
     }
 }

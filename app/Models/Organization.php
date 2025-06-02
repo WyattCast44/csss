@@ -11,13 +11,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Organization extends Model
 {
     /** @use HasFactory<\Database\Factories\OrganizationFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, HasUlids, Notifiable, SoftDeletes;
 
-    use HasUlids;
+    use LogsActivity;
 
     /*
     |-------------------------------------
@@ -51,6 +53,11 @@ class Organization extends Model
         'branch_id' => 'integer',
         'parent_id' => 'integer',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logFillable();
+    }
 
     /*
     |-------------------------------------

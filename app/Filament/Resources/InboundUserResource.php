@@ -4,10 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\InboundUserResource\Pages;
 use App\Models\InboundUser;
+use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -21,15 +24,55 @@ class InboundUserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-plus';
 
+    protected static ?string $navigationGroup = 'Members';
+
+    protected static ?string $navigationLabel = 'Inbound';
+
+    protected static ?string $modelLabel = 'Inbound Member';
+
+    protected static bool $isScopedToTenant = false;
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Select::make('user_id')
-                    ->relationship('user', 'name')
+                    ->relationship('user', 'name', modifyQueryUsing: function (Builder $query) {
+                        return $query->withoutGlobalScopes(['currentOrganization']);
+                    })
                     ->required()
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->getOptionLabelFromRecordUsing(function (User $record) {
+                        return $record->display_name.' ('.$record->dodid.')';
+                    })->createOptionForm([
+                        TextInput::make('dodid')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('first_name')
+                            ->maxLength(255),
+                        TextInput::make('last_name')
+                            ->maxLength(255),
+                        TextInput::make('middle_name')
+                            ->maxLength(255),
+                        TextInput::make('email')
+                            ->maxLength(255),
+                        TextInput::make('avatar')
+                            ->maxLength(255),
+                        TextInput::make('phone_numbers')
+                            ->tel(),
+                        TextInput::make('emails')
+                            ->email(),
+                        Select::make('branch_id')
+                            ->relationship('branch', 'name'),
+                        Select::make('rank_id')
+                            ->relationship('rank', 'name'),
+                        TextInput::make('job_duty_code')
+                            ->maxLength(255),
+                    ]),
                 DatePicker::make('report_date'),
                 Select::make('losing_organization_id')
                     ->relationship('losingOrganization', 'name')
@@ -96,11 +139,13 @@ class InboundUserResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
+    public static function getRecordSubNavigation(Page $page): array
     {
-        return [
-            //
-        ];
+        return $page->generateNavigationItems([
+            Pages\ViewInboundUser::class,
+            Pages\EditInboundUser::class,
+            Pages\ManageInprocessingActions::class,
+        ]);
     }
 
     public static function getPages(): array
@@ -108,7 +153,9 @@ class InboundUserResource extends Resource
         return [
             'index' => Pages\ListInboundUsers::route('/'),
             'create' => Pages\CreateInboundUser::route('/create'),
+            'view' => Pages\ViewInboundUser::route('/{record}'),
             'edit' => Pages\EditInboundUser::route('/{record}/edit'),
+            'inprocessing' => Pages\ManageInprocessingActions::route('/{record}/inprocessing'),
         ];
     }
 
