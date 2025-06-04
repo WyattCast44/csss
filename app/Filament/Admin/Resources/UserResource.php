@@ -9,6 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -66,14 +67,14 @@ class UserResource extends Resource
                     ->sortable()
                     ->toggleable()
                     ->searchable(isIndividual: true),
-                TextColumn::make('first_name')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
                 TextColumn::make('last_name')
                     ->searchable()
                     ->sortable()
                     ->searchable(isIndividual: true),
+                TextColumn::make('first_name')
+                    ->searchable(isIndividual: true)
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('name')
                     ->label('Display Name')
                     ->searchable()
@@ -85,6 +86,11 @@ class UserResource extends Resource
                     ->sortable()
                     ->toggleable()
                     ->searchable(),
+                IconColumn::make('email_verified')
+                    ->label('Email Verified')
+                    ->boolean()
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->sortable(),
                 TextColumn::make('branch.abbr')
                     ->numeric()
                     ->sortable()
@@ -93,6 +99,10 @@ class UserResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->toggleable(),
+                /* TextColumn::make('email_verified_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true), */
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -106,6 +116,7 @@ class UserResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('last_name', 'asc')
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])

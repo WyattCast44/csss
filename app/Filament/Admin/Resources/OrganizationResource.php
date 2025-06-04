@@ -75,9 +75,14 @@ class OrganizationResource extends Resource
                 Select::make('branch_id')
                     ->relationship('branch', 'name')
                     ->required(),
+                Select::make('level_id')
+                    ->relationship('level', 'name')
+                    ->nullable(),
                 Select::make('parent_id')
                     ->relationship('parent', 'name', modifyQueryUsing: fn (Builder $query) => $query->shared()->approved(), ignoreRecord: true)
-                    ->required(),
+                    ->nullable()
+                    ->searchable()
+                    ->preload(),
                 TextInput::make('avatar')
                     ->maxLength(255),
                 Toggle::make('approved')
@@ -115,6 +120,10 @@ class OrganizationResource extends Resource
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('branch.abbr')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('level.name')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),

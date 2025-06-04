@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->ulid('ulid')->index();
-            $table->string('dodid')->unique()->index();
+            $table->string('dodid')->unique()->index()->nullable();
             $table->string('name'); // basically display name
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();

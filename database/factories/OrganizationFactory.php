@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Branch;
 use App\Models\Organization;
+use App\Models\OrganizationLevel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -33,6 +34,7 @@ class OrganizationFactory extends Factory
             'approved' => fake()->boolean(),
             'parent_id' => fake()->boolean() ? Organization::factory() : null,
             'branch_id' => Branch::inRandomOrder()->first()->id,
+            'level_id' => OrganizationLevel::inRandomOrder()->first()->id,
         ];
     }
 
@@ -61,6 +63,13 @@ class OrganizationFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'parent_id' => $parent->id,
+        ]);
+    }
+
+    public function forLevel(OrganizationLevel $level): Factory
+    {
+        return $this->state(fn (array $attributes) => [
+            'level_id' => $level->id,
         ]);
     }
 }

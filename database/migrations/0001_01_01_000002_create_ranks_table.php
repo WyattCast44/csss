@@ -33,6 +33,7 @@ return new class extends Migration
     protected function seed(): void
     {
         $usaf = Branch::where('abbr', 'USAF')->first();
+        $other = Branch::where('abbr', 'OTH')->first();
 
         Rank::create([
             'name' => '2nd Lieutenant',
@@ -151,6 +152,13 @@ return new class extends Migration
             'abbr' => 'Other',
             'type' => RankType::OTHER,
             'branch_id' => $usaf->id,
+        ]);
+
+        Rank::create([
+            'name' => 'Not Applicable',
+            'abbr' => 'N/A',
+            'type' => RankType::OTHER,
+            'branch_id' => $other->id,
         ]);
     }
 };

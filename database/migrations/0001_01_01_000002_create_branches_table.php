@@ -34,6 +34,8 @@ return new class extends Migration
             ['name' => 'United States Department of Defense', 'abbr' => 'DOD', 'short_name' => 'US DoD'],
             ['name' => 'United States Goverment Schedule Employee', 'abbr' => 'GSE', 'short_name' => 'US GSE'],
             ['name' => 'Contractor', 'abbr' => 'CON', 'short_name' => 'Contractor'],
+            ['name' => 'Other', 'abbr' => 'OTH', 'short_name' => 'Other'],
+            ['name' => 'Not Applicable', 'abbr' => 'N/A', 'short_name' => 'N/A'],
         ];
 
         foreach ($branches as $branch) {

@@ -4,7 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\InboundUserResource\Pages;
 use App\Models\InboundUser;
+use App\Models\Organization;
 use App\Models\User;
+use App\Rules\AllowedEmailDomain;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -17,6 +20,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class InboundUserResource extends Resource
 {
@@ -38,50 +42,86 @@ class InboundUserResource extends Resource
             ->schema([
                 Select::make('user_id')
                     ->relationship('user', 'name', modifyQueryUsing: function (Builder $query) {
-                        return $query->withoutGlobalScopes(['currentOrganization']);
+                        return $query
+                            ->withoutGlobalScopes(['currentOrganization'])
+                            ->where('users.id', '!=', Auth::id());
                     })
                     ->required()
                     ->searchable()
                     ->preload()
                     ->getOptionLabelFromRecordUsing(function (User $record) {
-                        return $record->display_name.' ('.$record->dodid.')';
+                        $dodid = $record->dodid ? ' ('.$record->dodid.')' : '';
+
+                        return $record->display_name.$dodid;
                     })->createOptionForm([
                         TextInput::make('dodid')
-                            ->required()
-                            ->maxLength(255),
-                        TextInput::make('name')
-                            ->required()
-                            ->maxLength(255),
+                            ->label('DOD ID')
+                            ->nullable()
+                            ->maxLength(10)
+                            ->unique('users', 'dodid')
+                            ->validationMessages([
+                                'unique' => 'DOD ID has already been registered.',
+                            ]),
                         TextInput::make('first_name')
-                            ->maxLength(255),
-                        TextInput::make('last_name')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->required(),
                         TextInput::make('middle_name')
                             ->maxLength(255),
+                        TextInput::make('last_name')
+                            ->maxLength(255)
+                            ->required(),
+                        TextInput::make('name')
+                            ->label('Display Name / Call Sign')
+                            ->required()
+                            ->maxLength(255),
                         TextInput::make('email')
+                            ->label('Official Email')
+                            ->required()
+                            ->helperText('You must use a valid DoD email address to register.')
+                            ->rules([
+                                new AllowedEmailDomain,
+                            ])
+                            ->unique('users', 'email')
+                            ->validationMessages([
+                                'unique' => 'Email has already been registered.',
+                            ])
                             ->maxLength(255),
-                        TextInput::make('avatar')
-                            ->maxLength(255),
-                        TextInput::make('phone_numbers')
-                            ->tel(),
-                        TextInput::make('emails')
-                            ->email(),
                         Select::make('branch_id')
                             ->relationship('branch', 'name'),
                         Select::make('rank_id')
                             ->relationship('rank', 'name'),
                         TextInput::make('job_duty_code')
+                            ->label('AFSC / MOS / etc.')
                             ->maxLength(255),
                     ]),
                 DatePicker::make('report_date'),
                 Select::make('losing_organization_id')
-                    ->relationship('losingOrganization', 'name')
+                    ->relationship('losingOrganization', 'name', modifyQueryUsing: function (Builder $query) {
+                        return $query
+                            ->where('id', '!=', Filament::getTenant()->id)
+                            ->where('personal', false)
+                            ->approved()
+                            ->with('branch');
+                    })
+                    ->getOptionLabelFromRecordUsing(function (Organization $record) {
+                        return $record->name.' ('.$record->branch?->abbr.')';
+                    })
                     ->required()
                     ->nullable()
                     ->searchable()
                     ->preload(),
                 Select::make('sponsor_id')
-                    ->relationship('sponsor', 'name')
+                    ->relationship('sponsor', 'name', modifyQueryUsing: function (Builder $query) {
+                        return $query
+                            ->whereHas('organizations', function (Builder $query) {
+                                $query->where('organization_id', Filament::getTenant()->id);
+                            });
+                    })
+                    ->getOptionLabelFromRecordUsing(function (User $record) {
+                        return $record->display_name.' ('.$record->dodid.')';
+                    })
+                    ->searchable()
+                    ->preload()
                     ->nullable(),
                 Textarea::make('notes')
                     ->columnSpanFull(),

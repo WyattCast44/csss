@@ -8,6 +8,7 @@ use App\Models\InboundUser;
 use App\Models\InboundUserInprocessingAction;
 use App\Models\InprocessingAction;
 use App\Models\Organization;
+use App\Models\OrganizationLevel;
 use App\Models\Rank;
 use App\Models\TrainingFormat;
 use App\Models\User;
@@ -46,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
             'training_format' => TrainingFormat::class,
             'global_training' => GlobalTraining::class,
             'branch' => Branch::class,
+            'organization_level' => OrganizationLevel::class,
             'organization' => Organization::class,
             'user' => User::class,
             'rank' => Rank::class,

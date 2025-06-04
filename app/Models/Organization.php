@@ -40,6 +40,7 @@ class Organization extends Model
         'approved',
         'personal',
         'branch_id',
+        'level_id',
         'parent_id',
     ];
 
@@ -51,6 +52,7 @@ class Organization extends Model
         'approved' => 'boolean',
         'personal' => 'boolean',
         'branch_id' => 'integer',
+        'level_id' => 'integer',
         'parent_id' => 'integer',
     ];
 
@@ -82,6 +84,11 @@ class Organization extends Model
     public function inprocessingActions(): HasMany
     {
         return $this->hasMany(InprocessingAction::class);
+    }
+
+    public function level(): BelongsTo
+    {
+        return $this->belongsTo(OrganizationLevel::class);
     }
 
     public function parent(): BelongsTo

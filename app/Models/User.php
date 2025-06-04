@@ -66,11 +66,13 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
             'rank_id' => 'integer',
             'personal_organization_id' => 'integer',
             'current_organization_id' => 'integer',
+            'email_verified' => 'boolean',
         ];
     }
 
     protected $appends = [
         'display_name',
+        'email_verified',
     ];
 
     protected static function booted(): void
@@ -101,6 +103,13 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
         return Attribute::make(
             get: fn () => $displayName,
         )->shouldCache();
+    }
+
+    protected function emailVerified(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->email_verified_at ? true : false,
+        );
     }
 
     /*
