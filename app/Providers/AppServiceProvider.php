@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Jobs\ActivateTrainingsByStartDate;
+use App\Jobs\DeactivateTrainingsByEndDate;
 use App\Models\Branch;
 use App\Models\GlobalTraining;
 use App\Models\InboundUser;
@@ -9,6 +11,7 @@ use App\Models\InboundUserInprocessingAction;
 use App\Models\InprocessingAction;
 use App\Models\Organization;
 use App\Models\OrganizationLevel;
+use App\Models\OutboundUser;
 use App\Models\Rank;
 use App\Models\TrainingFormat;
 use App\Models\User;
@@ -17,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Schedule;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -38,7 +42,8 @@ class AppServiceProvider extends ServiceProvider
             ->configureDates()
             ->configureRequests()
             ->configureTelescope()
-            ->configureDebugbar(active: false);
+            ->configureDebugbar(active: false)
+            ->configureScheduledTasks();
     }
 
     private function configureMorphMaps(): self
@@ -54,6 +59,7 @@ class AppServiceProvider extends ServiceProvider
             'inbound_user' => InboundUser::class,
             'inprocessing_action' => InprocessingAction::class,
             'inbound_user_inprocessing_action' => InboundUserInprocessingAction::class,
+            'outbound_user' => OutboundUser::class,
         ]);
 
         return $this;
@@ -122,6 +128,19 @@ class AppServiceProvider extends ServiceProvider
             /** @phpstan-ignore-next-line */
             \Debugbar::disable();
         }
+
+        return $this;
+    }
+
+    private function configureScheduledTasks(): self
+    {
+        Schedule::job(new ActivateTrainingsByStartDate)
+            ->dailyAt('00:00')
+            ->timezone('America/New_York');
+
+        Schedule::job(new DeactivateTrainingsByEndDate)
+            ->dailyAt('00:00')
+            ->timezone('America/New_York');
 
         return $this;
     }

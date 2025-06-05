@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\InprocessingActionResource\Pages;
 use App\Models\InprocessingAction;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -28,14 +29,23 @@ class InprocessingActionResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
+                    ->label('Action Name')
                     ->required()
-                    ->maxLength(255),
-                TextInput::make('description')
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->helperText('For example, "Security Awareness Training"'),
                 TextInput::make('category')
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->required()
+                    ->helperText('For example, "Security", "Training", "Other"'),
                 Toggle::make('active')
                     ->required(),
+                RichEditor::make('description')
+                    ->columnSpanFull()
+                    ->nullable()
+                    ->disableToolbarButtons([
+                        'attachFiles',
+                        'codeBlock',
+                    ]),
             ]);
     }
 

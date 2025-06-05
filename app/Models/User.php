@@ -203,6 +203,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
             'name' => $teamName,
             'abbr' => $teamAbbr,
             'slug' => $teamSlug,
+            'email' => $this->email,
             'description' => 'This is your personal organization. It is used to store your personal information.',
             'personal' => true,
             'approved' => true,

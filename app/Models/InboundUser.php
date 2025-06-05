@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -32,10 +33,14 @@ class InboundUser extends Model
         'losing_organization_id',
         'sponsor_id',
         'notes',
+        'inprocess_at',
+        'inprocess_by_id',
     ];
 
     protected $casts = [
         'report_date' => 'datetime',
+        'inprocess_at' => 'datetime',
+        'inprocess_by_id' => 'integer',
     ];
 
     protected $appends = [
@@ -79,6 +84,19 @@ class InboundUser extends Model
     | Relationships
     |-------------------------------------
     */
+    public function inprocessingActions(): BelongsToMany
+    {
+        return $this->belongsToMany(InprocessingAction::class)
+            ->using(InboundUserInprocessingAction::class)
+            ->withPivot(['completed', 'completed_at', 'completed_by_id', 'notes', 'inprocessing_organization_id'])
+            ->withTimestamps();
+    }
+
+    public function inprocessor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'inprocess_by_id');
+    }
+
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
@@ -99,19 +117,6 @@ class InboundUser extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function inprocessingActions(): BelongsToMany
-    {
-        return $this->belongsToMany(InprocessingAction::class)
-            ->using(InboundUserInprocessingAction::class)
-            ->withPivot(['completed', 'completed_at', 'completed_by_id', 'notes', 'inprocessing_organization_id'])
-            ->withTimestamps();
-    }
-
-    public function completedBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'completed_by_id');
-    }
-
     /*
     |-------------------------------------
     | Private Methods
@@ -125,6 +130,30 @@ class InboundUser extends Model
 
         $this->inprocessingActions()->attach($activeActions, [
             'inprocessing_organization_id' => $this->organization_id,
+        ]);
+    }
+
+    /*
+    |-------------------------------------
+    | Public Methods
+    |-------------------------------------
+    */
+    public function inprocess(): void
+    {
+        $organization = $this->organization;
+
+        // we need to attach the user to the organization
+        $organization->users()->attach($this->user_id);
+
+        // if the report date is in the past or today, we need to delete the inbound user
+        if ($this->report_date->isPast() || $this->report_date->isToday()) {
+            $this->delete();
+        }
+
+        // otherwise, we can keep the record for tracking purposes
+        $this->update([
+            'inprocess_at' => now(),
+            'inprocess_by_id' => Auth::id() ?? null,
         ]);
     }
 }

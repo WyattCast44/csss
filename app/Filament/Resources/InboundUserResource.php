@@ -13,9 +13,12 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -134,23 +137,44 @@ class InboundUserResource extends Resource
             ->columns([
                 TextColumn::make('user.display_name')
                     ->label('Name')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('user.rank.abbr')
                     ->label('Rank')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('user.job_duty_code')
                     ->label('AFSC')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('report_date')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('days_until_report')
                     ->label('Days Until Report')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('losingOrganization.name')
-                    ->sortable(),
+                    ->searchable()
+                    ->sortable()
+                    ->limit(25)
+                    ->tooltip(fn (InboundUser $record) => $record->losingOrganization->name)
+                    ->toggleable(),
                 TextColumn::make('sponsor.display_name')
-                    ->sortable(),
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('inprocess_at')
+                    ->label('Date Inprocessed')
+                    ->date()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('inprocessor.display_name')
+                    ->label('Inprocessed By')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -168,7 +192,22 @@ class InboundUserResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Action::make('inprocess')
+                    ->visible(fn (InboundUser $record) => $record->inprocess_at === null)
+                    ->requiresConfirmation()
+                    ->modalDescription('Are you sure you want to add this user to the organization? This will add them to your members list. And they will be able to access the organization\'s resources. The inbound user record will continue to exist in the system until the report date is reached, or you archive it.')
+                    ->icon('heroicon-o-user-plus')
+                    ->color('warning')
+                    ->action(function (InboundUser $record) {
+                        $record->inprocess();
+
+                        Notification::make()
+                            ->title('User Added')
+                            ->body('The user has been added to the organization.')
+                            ->success()
+                            ->send();
+                    }),
+                EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

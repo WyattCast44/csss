@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\TrainingFrequency;
 use App\Filament\Admin\Resources\GlobalTrainingResource\Pages;
 use App\Models\GlobalTraining;
 use Filament\Forms\Components\DatePicker;
@@ -57,8 +58,9 @@ class GlobalTrainingResource extends Resource
                     ->live(),
                 Select::make('format_id')
                     ->relationship('format', 'name'),
-                TextInput::make('frequency')
-                    ->maxLength(50),
+                Select::make('frequency')
+                    ->options(TrainingFrequency::class)
+                    ->nullable(),
                 DatePicker::make('start_date')
                     ->helperText('If you have a start date when this training is available, enter the date here. We will automatically set the course as active on this date.'),
                 DatePicker::make('end_date')

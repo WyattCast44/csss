@@ -81,7 +81,7 @@ class UserResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                TextColumn::make('branch.name')
+                TextColumn::make('branch.abbr')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('rank.abbr')

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
+use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,10 +12,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Organization extends Model
+class Organization extends Model implements HasAvatar
 {
     /** @use HasFactory<\Database\Factories\OrganizationFactory> */
     use HasFactory, HasUlids, Notifiable, SoftDeletes;
@@ -59,6 +61,11 @@ class Organization extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logFillable();
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar ? Storage::url($this->avatar) : null;
     }
 
     /*
@@ -106,6 +113,16 @@ class Organization extends Model
     | Scopes
     |-------------------------------------
     */
+    public function scopeApproved(Builder $query): Builder
+    {
+        return $query->where('approved', true);
+    }
+
+    public function scopePersonal(Builder $query): Builder
+    {
+        return $query->where('personal', true);
+    }
+
     public function scopeRoot(Builder $query): Builder
     {
         return $query->whereNull('parent_id');
@@ -114,15 +131,5 @@ class Organization extends Model
     public function scopeShared(Builder $query): Builder
     {
         return $query->where('personal', false);
-    }
-
-    public function scopePersonal(Builder $query): Builder
-    {
-        return $query->where('personal', true);
-    }
-
-    public function scopeApproved(Builder $query): Builder
-    {
-        return $query->where('approved', true);
     }
 }

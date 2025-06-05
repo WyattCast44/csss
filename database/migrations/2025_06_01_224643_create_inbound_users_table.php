@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('losing_organization_id')->constrained('organizations');
             $table->foreignId('sponsor_id')->constrained('users');
             $table->text('notes')->nullable();
+            $table->timestamp('inprocess_at')->nullable();
+            $table->foreignId('inprocess_by_id')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Organization;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -41,6 +42,21 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        $this->seed();
+    }
+
+    private function seed(): void
+    {
+        // we need to create a default organization for the system that users can use as a fallback
+        Organization::create([
+            'name' => 'Not Applicable - Placeholder Organization',
+            'abbr' => 'N/A',
+            'slug' => 'na-org',
+            'description' => 'This is a placeholder organization for users who are not associated with any other organization. It is used to prevent errors when users are not associated with any other organization.',
+            'personal' => false,
+            'approved' => true,
+        ]);
     }
 
     public function down(): void

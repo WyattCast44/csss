@@ -3,11 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OutboundUserResource\Pages;
+use App\Models\Organization;
 use App\Models\OutboundUser;
+use App\Models\User;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -36,16 +38,40 @@ class OutboundUserResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('organization_id')
-                    ->required()
-                    ->numeric(),
                 Select::make('user_id')
-                    ->relationship('user', 'name')
+                    ->relationship('user', 'name', modifyQueryUsing: function (Builder $query) {
+                        $currentOutboundUsers = OutboundUser::where('organization_id', Filament::getTenant()->id)->pluck('user_id');
+
+                        return $query
+                            ->withoutGlobalScopes(['currentOrganization'])
+                            ->whereHas('organizations', function (Builder $query) {
+                                return $query->where('organization_id', Filament::getTenant()->id);
+                            })->whereNotIn('id', $currentOutboundUsers);
+                    })
+                    ->getOptionLabelFromRecordUsing(function (User $record) {
+                        $dodid = $record->dodid ? ' ('.$record->dodid.')' : '';
+
+                        return $record->display_name.$dodid;
+                    })
+                    ->required()
+                    ->searchable()
+                    ->preload(),
+                DatePicker::make('losing_date')
                     ->required(),
-                DatePicker::make('losing_date'),
                 Select::make('gaining_organization_id')
-                    ->relationship('gainingOrganization', 'name')
-                    ->required(),
+                    ->relationship('gainingOrganization', 'name', modifyQueryUsing: function (Builder $query) {
+                        return $query
+                            ->where('id', '!=', Filament::getTenant()->id)
+                            ->where('personal', false)
+                            ->approved()
+                            ->with('branch');
+                    })
+                    ->getOptionLabelFromRecordUsing(function (Organization $record) {
+                        return $record->name.' ('.$record->branch?->abbr.')';
+                    })
+                    ->required()
+                    ->searchable()
+                    ->preload(),
                 Textarea::make('notes')
                     ->columnSpanFull(),
             ]);

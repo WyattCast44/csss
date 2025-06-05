@@ -60,3 +60,9 @@ php artisan optimize:clear
 php artisan optimize
 php artisan filament:optimize
 ```
+
+
+# Packages
+
+- https://filamentphp.com/plugins/eightynine-reports
+- https://filamentphp.com/plugins/awcodes-recently
