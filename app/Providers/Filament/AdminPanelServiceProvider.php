@@ -2,12 +2,14 @@
 
 namespace App\Providers\Filament;
 
+use Asmit\ResizedColumn\ResizedColumnPlugin;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -36,7 +38,8 @@ class AdminPanelServiceProvider extends PanelProvider
             ->configureTenancy($panel)
             ->configureMiddleware($panel)
             ->configureNavigationGroups($panel)
-            ->configureDeveloperTools($panel);
+            ->configureDeveloperTools($panel)
+            ->configurePlugins($panel);
 
         return $panel
             ->pages([
@@ -142,7 +145,8 @@ class AdminPanelServiceProvider extends PanelProvider
     private function configureNavigationGroups(Panel $panel): self
     {
         $panel->navigationGroups([
-            //
+            NavigationGroup::make('Metadata'),
+            NavigationGroup::make('Training'),
         ]);
 
         return $this;
@@ -160,6 +164,15 @@ class AdminPanelServiceProvider extends PanelProvider
                 ->users([
                     'John Doe' => 'john.doe@us.af.mil',
                 ]),
+        ]);
+
+        return $this;
+    }
+
+    private function configurePlugins(Panel $panel): self
+    {
+        $panel->plugins([
+            ResizedColumnPlugin::make(),
         ]);
 
         return $this;

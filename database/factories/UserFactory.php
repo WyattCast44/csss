@@ -23,10 +23,10 @@ class UserFactory extends Factory
 
         return [
             'dodid' => fake()->regexify('[0-9]{10}'),
-            'name' => fake()->name(),
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
-            'middle_name' => fake()->firstName(),
+            'middle_name' => fake()->firstName(), // middle name
+            'nickname' => fake()->firstName(), // basically display name
             'email' => $email,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

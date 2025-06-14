@@ -3,6 +3,7 @@
 namespace App\Filament\Pages\Auth;
 
 use Filament\Forms\Components\Component;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -12,6 +13,17 @@ use Filament\Pages\Auth\EditProfile as BaseEditProfile;
 
 class EditProfile extends BaseEditProfile
 {
+    protected function getAvatarFormComponent(): Component
+    {
+        return FileUpload::make('avatar')
+            ->label('Avatar')
+            ->image()
+            ->imageEditor()
+            ->avatar()
+            ->circleCropper()
+            ->nullable();
+    }
+
     protected function getDodidFormComponent(): Component
     {
         return TextInput::make('dodid')
@@ -57,7 +69,7 @@ class EditProfile extends BaseEditProfile
 
     protected function getNameFormComponent(): Component
     {
-        return TextInput::make('name')
+        return TextInput::make('nickname')
             ->label('Nickname')
             ->required()
             ->maxLength(255);
@@ -109,6 +121,7 @@ class EditProfile extends BaseEditProfile
     {
         return $form
             ->schema([
+                $this->getAvatarFormComponent(),
                 $this->getDodidFormComponent(),
                 $this->getEmailFormComponent(),
                 Grid::make(2)

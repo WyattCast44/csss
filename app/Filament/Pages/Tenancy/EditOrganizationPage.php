@@ -5,6 +5,7 @@ namespace App\Filament\Pages\Tenancy;
 use App\Models\Organization;
 use App\Rules\AllowedEmailDomain;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -45,9 +46,14 @@ class EditOrganizationPage extends EditTenantProfile
                     ->rules([
                         new AllowedEmailDomain,
                     ]),
-                TextInput::make('pas_code')
-                    ->label('PAS Code')
-                    ->nullable(),
+                Repeater::make('pas_codes')
+                    ->addActionLabel('Add PAS Code')
+                    ->columns(1)
+                    ->schema([
+                        TextInput::make('label')->required(),
+                        TextInput::make('code')->required(),
+                    ])
+                    ->collapsible(),
                 Select::make('branch_id')
                     ->relationship('branch', 'name')
                     ->required(),

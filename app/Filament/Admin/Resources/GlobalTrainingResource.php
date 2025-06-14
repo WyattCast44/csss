@@ -24,6 +24,8 @@ class GlobalTrainingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
+    protected static ?string $navigationGroup = 'Training';
+
     public static function form(Form $form): Form
     {
         return $form

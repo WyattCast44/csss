@@ -24,7 +24,7 @@ class OrganizationFactory extends Factory
             'abbr' => fake()->word(),
             'slug' => fake()->slug(),
             'description' => fake()->sentence(),
-            'pas_code' => fake()->word(),
+            'pas_codes' => null,
             'mailing_addresses' => null,
             'physical_addresses' => null,
             'email' => fake()->email(),

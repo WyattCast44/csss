@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\GlobalTraining;
-use Illuminate\Contracts\Broadcasting\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\Middleware\WithoutOverlapping;
@@ -22,21 +22,14 @@ class ActivateTrainingsByStartDate implements ShouldBeUnique, ShouldQueue
 
     public function handle(): void
     {
-        $globalTrainings = GlobalTraining::query()
-            ->where('start_date', '<=', now())
+        Log::info('Activating trainings by start date');
+
+        GlobalTraining::query()
+            ->whereNowOrPast('start_date')
             ->where('active', false)
-            ->get();
+            ->lazyById(100, column: 'id')
+            ->each->update(['active' => true]);
 
-        foreach ($globalTrainings as $training) {
-            Log::info('Activating training: '.$training->id);
-
-            $training->update([
-                'active' => true,
-            ]);
-
-            Log::info('Training activated: '.$training->id);
-        }
-
-        Log::info('Activated '.$globalTrainings->count().' trainings');
+        Log::info('Activated trainings by start date');
     }
 }

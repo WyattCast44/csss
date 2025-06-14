@@ -21,5 +21,6 @@ class Branch extends Model
         'name',
         'abbr',
         'short_name',
+        'logo',
     ];
 }

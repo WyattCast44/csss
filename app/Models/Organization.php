@@ -15,11 +15,13 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Organization extends Model implements HasAvatar
 {
     /** @use HasFactory<\Database\Factories\OrganizationFactory> */
-    use HasFactory, HasUlids, Notifiable, SoftDeletes;
+    use HasFactory, HasSlug, HasUlids, Notifiable, SoftDeletes;
 
     use LogsActivity;
 
@@ -33,7 +35,7 @@ class Organization extends Model implements HasAvatar
         'abbr',
         'slug',
         'description',
-        'pas_code',
+        'pas_codes',
         'mailing_addresses',
         'physical_addresses',
         'email',
@@ -42,6 +44,7 @@ class Organization extends Model implements HasAvatar
         'approved',
         'personal',
         'branch_id',
+        'command_id',
         'level_id',
         'parent_id',
     ];
@@ -49,11 +52,13 @@ class Organization extends Model implements HasAvatar
     protected $casts = [
         'mailing_addresses' => 'array',
         'physical_addresses' => 'array',
+        'pas_codes' => 'array',
         'emails' => 'array',
         'phone_numbers' => 'array',
         'approved' => 'boolean',
         'personal' => 'boolean',
         'branch_id' => 'integer',
+        'command_id' => 'integer',
         'level_id' => 'integer',
         'parent_id' => 'integer',
     ];
@@ -66,6 +71,18 @@ class Organization extends Model implements HasAvatar
     public function getFilamentAvatarUrl(): ?string
     {
         return $this->avatar ? Storage::url($this->avatar) : null;
+    }
+
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('abbr')
+            ->saveSlugsTo('slug');
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
     }
 
     /*
@@ -81,6 +98,11 @@ class Organization extends Model implements HasAvatar
     public function children(): HasMany
     {
         return $this->hasMany(Organization::class, 'parent_id');
+    }
+
+    public function command(): BelongsTo
+    {
+        return $this->belongsTo(OrganizationCommand::class);
     }
 
     public function inboundUsers(): HasMany

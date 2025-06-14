@@ -31,10 +31,14 @@ class OutboundUser extends Model
         'losing_date',
         'gaining_organization_id',
         'notes',
+        'outprocess_at',
+        'outprocess_by_id',
     ];
 
     protected $casts = [
         'losing_date' => 'date',
+        'outprocess_at' => 'datetime',
+        'outprocess_by_id' => 'integer',
     ];
 
     protected $appends = [

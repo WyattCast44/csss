@@ -145,15 +145,15 @@ class InboundUser extends Model
         // we need to attach the user to the organization
         $organization->users()->attach($this->user_id);
 
+        // update the inbound user to reflect the inprocess date and the inprocess by user
+        $this->update([
+            'inprocess_at' => now(),
+            'inprocess_by_id' => Auth::id() ?? User::getSystemUser()->id,
+        ]);
+
         // if the report date is in the past or today, we need to delete the inbound user
         if ($this->report_date->isPast() || $this->report_date->isToday()) {
             $this->delete();
         }
-
-        // otherwise, we can keep the record for tracking purposes
-        $this->update([
-            'inprocess_at' => now(),
-            'inprocess_by_id' => Auth::id() ?? null,
-        ]);
     }
 }

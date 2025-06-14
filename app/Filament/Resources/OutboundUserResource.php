@@ -39,7 +39,7 @@ class OutboundUserResource extends Resource
         return $form
             ->schema([
                 Select::make('user_id')
-                    ->relationship('user', 'name', modifyQueryUsing: function (Builder $query) {
+                    ->relationship('user', 'display_name', modifyQueryUsing: function (Builder $query) {
                         $currentOutboundUsers = OutboundUser::where('organization_id', Filament::getTenant()->id)->pluck('user_id');
 
                         return $query

@@ -37,7 +37,7 @@ class Register extends AuthRegister
     {
         return TextInput::make('middle_name')
             ->label('Middle Name')
-            ->required();
+            ->nullable();
     }
 
     protected function getLastNameFormComponent(): Component
@@ -49,9 +49,8 @@ class Register extends AuthRegister
 
     protected function getNicknameFormComponent(): Component
     {
-        return TextInput::make('name')
-            ->label('Display Name / Call Sign')
-            ->required();
+        return TextInput::make('nickname')
+            ->label('Nickname');
     }
 
     protected function getEmailFormComponent(): Component
@@ -79,7 +78,7 @@ class Register extends AuthRegister
     {
         $officerRanks = Rank::officer()->select('name', 'id')->get();
         $enlistedRanks = Rank::enlisted()->select('name', 'id')->get();
-        $otherRanks = Rank::other()->select('name', 'id')->get();
+        $otherRanks = Rank::civilian()->select('name', 'id')->get();
 
         return Select::make('rank_id')
             ->label('Rank')

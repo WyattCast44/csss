@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\InprocessingActionResource\Pages;
 use App\Models\InprocessingAction;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -33,10 +35,21 @@ class InprocessingActionResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->helperText('For example, "Security Awareness Training"'),
-                TextInput::make('category')
-                    ->maxLength(255)
+                Select::make('category_id')
+                    ->relationship('category', 'name')
                     ->required()
-                    ->helperText('For example, "Security", "Training", "Other"'),
+                    ->helperText('For example, "Security", "Training", "Other"')
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('Category Name')
+                            ->required()
+                            ->maxLength(255)
+                            ->helperText('For example, "Security", "Training", "Other"'),
+                        Select::make('organization_id')
+                            ->relationship('organization', 'name')
+                            ->required()
+                            ->default(Filament::getTenant()->id),
+                    ]),
                 Toggle::make('active')
                     ->required(),
                 RichEditor::make('description')
@@ -57,19 +70,20 @@ class InprocessingActionResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                TextColumn::make('category')
+                TextColumn::make('category.name')
                     ->sortable()
                     ->searchable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->badge(),
+                IconColumn::make('active')
+                    ->boolean()
+                    ->toggleable()
+                    ->sortable(),
                 TextColumn::make('description')
                     ->searchable()
                     ->toggleable()
                     ->wrap()
                     ->limit(50),
-                IconColumn::make('active')
-                    ->boolean()
-                    ->toggleable()
-                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

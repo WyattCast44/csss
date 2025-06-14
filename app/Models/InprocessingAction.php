@@ -28,12 +28,13 @@ class InprocessingAction extends Model
         'organization_id',
         'name',
         'description',
-        'category',
+        'category_id',
         'active',
     ];
 
     protected $casts = [
         'active' => 'boolean',
+        'category_id' => 'integer',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -46,6 +47,11 @@ class InprocessingAction extends Model
     | Relationships
     |-------------------------------------
     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(ProcessingActionCategory::class);
+    }
+
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);

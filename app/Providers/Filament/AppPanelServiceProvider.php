@@ -8,6 +8,7 @@ use App\Filament\Pages\Tenancy\CreateOrganizationPage;
 use App\Filament\Pages\Tenancy\EditOrganizationPage;
 use App\Http\Middleware\ApplyTenantScopes;
 use App\Models\Organization;
+use Asmit\ResizedColumn\ResizedColumnPlugin;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
@@ -43,7 +44,8 @@ class AppPanelServiceProvider extends PanelProvider
             ->configureTenancy($panel)
             ->configureMiddleware($panel)
             ->configureNavigationGroups($panel)
-            ->configureDeveloperTools($panel);
+            ->configureDeveloperTools($panel)
+            ->configurePlugins($panel);
 
         return $panel
             ->pages([
@@ -183,6 +185,15 @@ class AppPanelServiceProvider extends PanelProvider
                 ->users([
                     'John Doe' => 'john.doe@us.af.mil',
                 ]),
+        ]);
+
+        return $this;
+    }
+
+    private function configurePlugins(Panel $panel): self
+    {
+        $panel->plugins([
+            ResizedColumnPlugin::make(),
         ]);
 
         return $this;

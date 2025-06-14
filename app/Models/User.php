@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -20,12 +21,14 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class User extends Authenticatable implements FilamentUser, HasTenants, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasName, HasTenants, MustVerifyEmail
 {
     use CausesActivity, LogsActivity;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, HasUlids, Notifiable, SoftDeletes;
+
+    const SYSTEM_USER_DODID = '9999999999';
 
     /*
     |-------------------------------------
@@ -34,10 +37,10 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     */
     protected $fillable = [
         'dodid',
-        'name',
         'first_name',
         'last_name',
         'middle_name',
+        'nickname',
         'email',
         'password',
         'avatar',
@@ -71,7 +74,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     }
 
     protected $appends = [
-        'display_name',
         'email_verified',
     ];
 
@@ -92,18 +94,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     | Accessors
     |-------------------------------------
     */
-    protected function displayName(): Attribute
-    {
-        $displayName = $this->attributes['last_name'].', '.$this->attributes['first_name'];
-
-        if ($this->attributes['middle_name']) {
-            $displayName .= ' '.$this->attributes['middle_name'][0].'.';
-        }
-
-        return Attribute::make(
-            get: fn () => $displayName,
-        )->shouldCache();
-    }
 
     protected function emailVerified(): Attribute
     {
@@ -112,11 +102,21 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
         );
     }
 
+    public static function getSystemUser(): self
+    {
+        return self::where('dodid', self::SYSTEM_USER_DODID)->firstOrFail();
+    }
+
     /*
     |-------------------------------------
     | Filament Configuration
     |-------------------------------------
     */
+    public function getFilamentName(): string
+    {
+        return $this->display_name;
+    }
+
     public function getTenants(Panel $panel): Collection
     {
         return $this->organizations;
@@ -195,14 +195,12 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     {
         $name = $this->first_name ? $this->first_name : $this->last_name ?? $this->name;
 
-        $teamName = $name.'\'s Personal Organization';
+        $teamName = $name.'\'s Personal Org';
         $teamAbbr = $name.'\'s Org';
-        $teamSlug = str($teamName)->slug();
 
         $organization = Organization::create([
             'name' => $teamName,
             'abbr' => $teamAbbr,
-            'slug' => $teamSlug,
             'email' => $this->email,
             'description' => 'This is your personal organization. It is used to store your personal information.',
             'personal' => true,

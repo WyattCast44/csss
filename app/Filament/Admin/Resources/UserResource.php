@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Models\User;
+use App\Rules\AllowedEmailDomain;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -27,33 +28,32 @@ class UserResource extends Resource
             ->schema([
                 TextInput::make('dodid')
                     ->required()
-                    ->maxLength(255),
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
+                    ->maxLength(10)
+                    ->unique(ignoreRecord: true),
                 TextInput::make('first_name')
-                    ->maxLength(255),
-                TextInput::make('last_name')
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->required(),
                 TextInput::make('middle_name')
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->nullable(),
+                TextInput::make('last_name')
+                    ->maxLength(255)
+                    ->required(),
+                TextInput::make('nickname')
+                    ->maxLength(255)
+                    ->nullable(),
                 TextInput::make('email')
                     ->email()
-                    ->maxLength(255),
-                TextInput::make('avatar')
-                    ->maxLength(255),
-                TextInput::make('phone_numbers')
-                    ->tel(),
-                TextInput::make('emails')
-                    ->email(),
+                    ->maxLength(255)
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->rules([
+                        new AllowedEmailDomain,
+                    ]),
                 Select::make('branch_id')
                     ->relationship('branch', 'name'),
                 Select::make('rank_id')
                     ->relationship('rank', 'name'),
-                Select::make('personal_organization_id')
-                    ->relationship('personalOrganization', 'name'),
-                Select::make('current_organization_id')
-                    ->relationship('currentOrganization', 'name'),
             ]);
     }
 
@@ -75,8 +75,7 @@ class UserResource extends Resource
                     ->searchable(isIndividual: true)
                     ->sortable()
                     ->toggleable(),
-                TextColumn::make('name')
-                    ->label('Display Name')
+                TextColumn::make('nickname')
                     ->searchable()
                     ->sortable()
                     ->toggleable()
@@ -99,10 +98,6 @@ class UserResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->toggleable(),
-                /* TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true), */
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

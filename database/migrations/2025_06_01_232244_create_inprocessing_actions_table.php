@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('organization_id')->constrained('organizations');
             $table->string('name');
             $table->string('description')->nullable();
-            $table->string('category')->nullable();
+            $table->foreignId('category_id')->nullable()->constrained('processing_action_categories');
             $table->boolean('active')->default(true);
             $table->timestamps();
             $table->softDeletes();

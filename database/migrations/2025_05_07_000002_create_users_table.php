@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Branch;
+use App\Models\Rank;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->ulid('ulid')->index();
             $table->string('dodid')->unique()->index()->nullable();
-            $table->string('name'); // basically display name
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('middle_name')->nullable();
+            $table->string('nickname')->nullable(); // basically display name
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
@@ -34,10 +37,32 @@ return new class extends Migration
             $table->foreignId('personal_organization_id')->nullable();
             $table->foreignId('current_organization_id')->nullable();
 
+            // Stored / calculated columns
+
+            // display name, format: Last, First Middle (if applicable)
+            $table->string('display_name')->storedAs(
+                'CONCAT_WS(" ", CONCAT(last_name, ", ", first_name), CONCAT(LEFT(IFNULL(middle_name, ""), 1), IF(middle_name IS NOT NULL, ".", "")))'
+            );
+
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
         });
+
+        $this->seed();
+    }
+
+    private function seed(): void
+    {
+        User::create([
+            'dodid' => '9999999999',
+            'first_name' => 'System',
+            'last_name' => 'User',
+            'nickname' => 'System Account',
+            'branch_id' => Branch::where('abbr', 'N/A')->first()->id,
+            'rank_id' => Rank::where('abbr', 'N/A')->first()->id,
+            'job_duty_code' => 'N/A',
+        ]);
     }
 
     public function down(): void

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Organization;
+use App\Models\ProcessingActionCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,7 +22,7 @@ class InprocessingActionFactory extends Factory
             'organization_id' => Organization::factory(),
             'name' => fake()->words(fake()->numberBetween(1, 3), true),
             'description' => fake()->optional()->sentence,
-            'category' => fake()->optional()->word(),
+            'category_id' => ProcessingActionCategory::inRandomOrder()->first()->id,
             'active' => fake()->boolean(),
         ];
     }

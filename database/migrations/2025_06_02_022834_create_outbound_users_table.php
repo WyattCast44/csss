@@ -16,6 +16,8 @@ return new class extends Migration
             $table->timestamp('losing_date')->nullable();
             $table->foreignId('gaining_organization_id')->constrained('organizations');
             $table->text('notes')->nullable();
+            $table->timestamp('outprocess_at')->nullable();
+            $table->foreignId('outprocess_by_id')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

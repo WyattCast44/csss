@@ -4,14 +4,20 @@ namespace App\Providers;
 
 use App\Jobs\ActivateTrainingsByStartDate;
 use App\Jobs\DeactivateTrainingsByEndDate;
+use App\Jobs\InprocessInboundUsersByReportDate;
+use App\Jobs\OutprocessOutboundUsersByReportDate;
+use App\Models\AttachedUser;
+use App\Models\Base;
 use App\Models\Branch;
 use App\Models\GlobalTraining;
 use App\Models\InboundUser;
 use App\Models\InboundUserInprocessingAction;
 use App\Models\InprocessingAction;
 use App\Models\Organization;
+use App\Models\OrganizationCommand;
 use App\Models\OrganizationLevel;
 use App\Models\OutboundUser;
+use App\Models\ProcessingActionCategory;
 use App\Models\Rank;
 use App\Models\TrainingFormat;
 use App\Models\User;
@@ -26,11 +32,6 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-        //
-    }
-
     public function boot(): void
     {
         $this
@@ -56,10 +57,14 @@ class AppServiceProvider extends ServiceProvider
             'organization' => Organization::class,
             'user' => User::class,
             'rank' => Rank::class,
+            'base' => Base::class,
+            'organization_command' => OrganizationCommand::class,
             'inbound_user' => InboundUser::class,
             'inprocessing_action' => InprocessingAction::class,
             'inbound_user_inprocessing_action' => InboundUserInprocessingAction::class,
             'outbound_user' => OutboundUser::class,
+            'attached_user' => AttachedUser::class,
+            'processing_action_category' => ProcessingActionCategory::class,
         ]);
 
         return $this;
@@ -135,12 +140,20 @@ class AppServiceProvider extends ServiceProvider
     private function configureScheduledTasks(): self
     {
         Schedule::job(new ActivateTrainingsByStartDate)
-            ->dailyAt('00:00')
+            ->everyTwoHours()
             ->timezone('America/New_York');
 
         Schedule::job(new DeactivateTrainingsByEndDate)
-            ->dailyAt('00:00')
+            ->everyTwoHours()
             ->timezone('America/New_York');
+
+        Schedule::job(new InprocessInboundUsersByReportDate)
+            ->everyTwoHours()
+            ->withoutOverlapping();
+
+        Schedule::job(new OutprocessOutboundUsersByReportDate)
+            ->everyTwoHours()
+            ->withoutOverlapping();
 
         return $this;
     }

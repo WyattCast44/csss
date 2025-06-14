@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description')->nullable(); // example: The 15th Test and Evaluation Squadron is responsible for the testing and evaluation of the Air Force's weapons systems.
 
             // Location / Unit Information
-            $table->string('pas_code')->nullable(); // example: NUC15OS
+            $table->json('pas_codes')->nullable(); // example: ["NUC15OS", "NUC15OS-1"]
             $table->json('mailing_addresses')->nullable();
             $table->json('physical_addresses')->nullable();
 
@@ -33,6 +33,7 @@ return new class extends Migration
             $table->boolean('personal')->default(false);
             $table->foreignId('branch_id')->nullable()->constrained('branches');
             $table->foreignId('level_id')->nullable()->constrained('organization_levels');
+            $table->foreignId('command_id')->nullable()->constrained('organization_commands');
 
             // Parent Organization
             $table->foreignId('parent_id')->nullable()->constrained('organizations');

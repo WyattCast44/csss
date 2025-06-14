@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('name', 100)->unique()->index();
             $table->string('abbr', 10)->unique()->index();
             $table->string('short_name', 100)->nullable();
+            $table->text('logo')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

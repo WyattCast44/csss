@@ -23,6 +23,8 @@ class RankResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-swatch';
 
+    protected static ?string $navigationGroup = 'Metadata';
+
     public static function form(Form $form): Form
     {
         return $form

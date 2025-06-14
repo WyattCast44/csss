@@ -37,13 +37,15 @@ class OrganizationResource extends Resource
                 TextInput::make('abbr')
                     ->required()
                     ->maxLength(255),
-                TextInput::make('slug')
-                    ->required()
-                    ->maxLength(255),
                 Textarea::make('description')
                     ->columnSpanFull(),
-                TextInput::make('pas_code')
-                    ->maxLength(255),
+                Repeater::make('pas_codes')
+                    ->addActionLabel('Add PAS Code')
+                    ->schema([
+                        TextInput::make('label')->required(),
+                        TextInput::make('code')->required(),
+                    ])
+                    ->collapsible(),
                 Repeater::make('mailing_addresses')
                     ->addActionLabel('Add mailing address')
                     ->columns(2)
@@ -80,6 +82,9 @@ class OrganizationResource extends Resource
                 Select::make('level_id')
                     ->relationship('level', 'name')
                     ->nullable(),
+                Select::make('command_id')
+                    ->relationship('command', 'name')
+                    ->nullable(),
                 Select::make('parent_id')
                     ->relationship('parent', 'name', modifyQueryUsing: fn (Builder $query) => $query->shared()->approved(), ignoreRecord: true)
                     ->nullable()
@@ -112,15 +117,6 @@ class OrganizationResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                TextColumn::make('pas_code')
-                    ->label('PAS Code')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
-                TextColumn::make('email')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
                 TextColumn::make('branch.abbr')
                     ->searchable()
                     ->sortable()
@@ -129,8 +125,20 @@ class OrganizationResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+                TextColumn::make('command.abbr')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('parent.abbr')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
                 IconColumn::make('approved')
                     ->boolean(),
+                TextColumn::make('email')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

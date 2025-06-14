@@ -2,9 +2,13 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\Pages\CreateUser;
+use App\Filament\Resources\UserResource\Pages\EditUser;
+use App\Filament\Resources\UserResource\Pages\ListUsers;
 use App\Models\User;
+use App\Rules\AllowedEmailDomain;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -33,33 +37,49 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
+
                 TextInput::make('dodid')
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
+                    ->label('DOD ID')
+                    ->nullable()
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true),
                 TextInput::make('first_name')
-                    ->maxLength(255),
-                TextInput::make('last_name')
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->required(),
                 TextInput::make('middle_name')
+                    ->label('Middle Name')
+                    ->maxLength(255)
+                    ->nullable(),
+                TextInput::make('last_name')
+                    ->maxLength(255)
+                    ->required(),
+                TextInput::make('nickname')
                     ->maxLength(255),
                 TextInput::make('email')
                     ->email()
-                    ->maxLength(255),
-                TextInput::make('avatar')
-                    ->maxLength(255),
-                TextInput::make('phone_numbers')
-                    ->tel(),
-                TextInput::make('emails')
-                    ->email(),
+                    ->maxLength(255)
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->rules([
+                        new AllowedEmailDomain,
+                    ])->disabled(),
                 Select::make('branch_id')
-                    ->relationship('branch', 'name'),
+                    ->relationship('branch', 'name')
+                    ->required(),
                 Select::make('rank_id')
-                    ->relationship('rank', 'name'),
+                    ->relationship('rank', 'name')
+                    ->required(),
                 TextInput::make('job_duty_code')
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->nullable(),
+                FileUpload::make('avatar')
+                    ->label('Avatar')
+                    ->image()
+                    ->imageEditor()
+                    ->avatar()
+                    ->circleCropper()
+                    ->nullable()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -67,28 +87,37 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('dodid')
-                    ->label('DOD ID')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
                 TextColumn::make('display_name')
                     ->label('Name')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+                TextColumn::make('nickname')
+                    ->label('Nickname')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('email')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+                TextColumn::make('dodid')
+                    ->label('DOD ID')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable()
+                    ->copyable()
+                    ->icon('heroicon-o-clipboard-document-list'),
                 TextColumn::make('branch.abbr')
-                    ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('rank.abbr')
-                    ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('job_duty_code')
-                    ->searchable(),
+                    ->label('AFSC')
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -128,12 +157,19 @@ class UserResource extends Resource
         ];
     }
 
+    public static function getRecordSubNavigation($page): array
+    {
+        return $page->generateNavigationItems([
+            EditUser::class,
+        ]);
+    }
+
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 

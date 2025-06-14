@@ -44,7 +44,7 @@ class InboundUserResource extends Resource
         return $form
             ->schema([
                 Select::make('user_id')
-                    ->relationship('user', 'name', modifyQueryUsing: function (Builder $query) {
+                    ->relationship('user', 'display_name', modifyQueryUsing: function (Builder $query) {
                         return $query
                             ->withoutGlobalScopes(['currentOrganization'])
                             ->where('users.id', '!=', Auth::id());
@@ -73,9 +73,8 @@ class InboundUserResource extends Resource
                         TextInput::make('last_name')
                             ->maxLength(255)
                             ->required(),
-                        TextInput::make('name')
-                            ->label('Display Name / Call Sign')
-                            ->required()
+                        TextInput::make('nickname')
+                            ->label('Nickname')
                             ->maxLength(255),
                         TextInput::make('email')
                             ->label('Official Email')
@@ -103,7 +102,6 @@ class InboundUserResource extends Resource
                         return $query
                             ->where('id', '!=', Filament::getTenant()->id)
                             ->where('personal', false)
-                            ->approved()
                             ->with('branch');
                     })
                     ->getOptionLabelFromRecordUsing(function (Organization $record) {
@@ -112,9 +110,26 @@ class InboundUserResource extends Resource
                     ->required()
                     ->nullable()
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('Organization Name')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('abbr')
+                            ->label('Abbreviation')
+                            ->maxLength(255)
+                            ->required(),
+                        Select::make('branch_id')
+                            ->relationship('branch', 'name')
+                            ->required(),
+                        Select::make('level_id')
+                            ->label('Organization Level')
+                            ->relationship('level', 'name')
+                            ->required(),
+                    ]),
                 Select::make('sponsor_id')
-                    ->relationship('sponsor', 'name', modifyQueryUsing: function (Builder $query) {
+                    ->relationship('sponsor', 'display_name', modifyQueryUsing: function (Builder $query) {
                         return $query
                             ->whereHas('organizations', function (Builder $query) {
                                 $query->where('organization_id', Filament::getTenant()->id);
@@ -154,7 +169,8 @@ class InboundUserResource extends Resource
                 TextColumn::make('days_until_report')
                     ->label('Days Until Report')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->badge(),
                 TextColumn::make('losingOrganization.name')
                     ->searchable()
                     ->sortable()
