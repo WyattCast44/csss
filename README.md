@@ -66,3 +66,4 @@ php artisan filament:optimize
 
 - https://filamentphp.com/plugins/eightynine-reports
 - https://filamentphp.com/plugins/awcodes-recently
+- https://www.reddit.com/r/laravel/comments/18x7wix/how_to_fill_out_existing_pdf/

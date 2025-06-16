@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Building;
 use App\Models\GlobalTraining;
 use App\Models\InprocessingAction;
 use App\Models\Organization;
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
 
         $organizations->each(function ($organization) {
             InprocessingAction::factory(fake()->numberBetween(3, 10))->forOrganization($organization)->create();
+            Building::factory(fake()->numberBetween(3, 10))->forOrganization($organization)->create();
         });
 
         $users = User::factory(10)->create();

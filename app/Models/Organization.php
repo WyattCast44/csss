@@ -95,6 +95,11 @@ class Organization extends Model implements HasAvatar
         return $this->belongsTo(Branch::class);
     }
 
+    public function buildings(): HasMany
+    {
+        return $this->hasMany(Building::class);
+    }
+
     public function children(): HasMany
     {
         return $this->hasMany(Organization::class, 'parent_id');
@@ -123,6 +128,16 @@ class Organization extends Model implements HasAvatar
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
+    }
+
+    public function safes(): HasMany
+    {
+        return $this->hasMany(Safe::class);
+    }
+
+    public function rooms(): HasMany
+    {
+        return $this->hasMany(Room::class);
     }
 
     public function users(): BelongsToMany

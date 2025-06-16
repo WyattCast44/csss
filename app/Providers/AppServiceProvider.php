@@ -10,6 +10,7 @@ use App\Jobs\OutprocessOutboundUsersByReportDate;
 use App\Models\AttachedUser;
 use App\Models\Base;
 use App\Models\Branch;
+use App\Models\Building;
 use App\Models\FitnessTest;
 use App\Models\GlobalTraining;
 use App\Models\InboundUser;
@@ -22,6 +23,8 @@ use App\Models\OutboundUser;
 use App\Models\PendingFitnessTest;
 use App\Models\ProcessingActionCategory;
 use App\Models\Rank;
+use App\Models\Room;
+use App\Models\Safe;
 use App\Models\TrainingFormat;
 use App\Models\User;
 use Carbon\CarbonImmutable;
@@ -53,10 +56,13 @@ class AppServiceProvider extends ServiceProvider
     private function configureMorphMaps(): self
     {
         Relation::enforceMorphMap([
+            'safe' => Safe::class,
+            'room' => Room::class,
             'user' => User::class,
             'rank' => Rank::class,
             'base' => Base::class,
             'branch' => Branch::class,
+            'building' => Building::class,
             'inbound_user' => InboundUser::class,
             'organization' => Organization::class,
             'fitness_test' => FitnessTest::class,
