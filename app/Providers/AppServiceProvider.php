@@ -159,7 +159,7 @@ class AppServiceProvider extends ServiceProvider
 
         foreach ($jobs as $job) {
             Schedule::job($job)
-                ->everyMinute()
+                ->everyTwoHours()
                 ->timezone('America/New_York');
         }
 

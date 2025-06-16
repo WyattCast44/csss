@@ -10,6 +10,8 @@ use Filament\Support\Enums\MaxWidth;
 
 class AppDashboard extends Dashboard
 {
+    protected static ?string $title = 'Home';
+
     public function getMaxContentWidth(): MaxWidth
     {
         return MaxWidth::ScreenTwoExtraLarge;

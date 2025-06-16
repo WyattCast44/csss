@@ -160,6 +160,8 @@ class AppPanelServiceProvider extends PanelProvider
     {
         $panel->navigationGroups([
             NavigationGroup::make()
+                ->label('Dashboards'),
+            NavigationGroup::make()
                 ->label('Members'),
             NavigationGroup::make()
                 ->label('Settings'),
