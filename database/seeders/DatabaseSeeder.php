@@ -31,6 +31,20 @@ class DatabaseSeeder extends Seeder
             'email' => 'john.doe@us.af.mil',
         ]);
 
+        $user->fitnessTests()->create([
+            'date' => now()->subYear(),
+            'results' => [
+                'pushups' => 100,
+                'situps' => 100,
+            ],
+            'score' => 100,
+            'notes' => 'Test notes',
+            'test_location' => 'Test location',
+            'passed' => true,
+            'next_test_date' => now()->addYear(),
+            'next_test_created' => false,
+        ]);
+
         $organization = Organization::create([
             'name' => '15th Air Force',
             'abbr' => '15AF',

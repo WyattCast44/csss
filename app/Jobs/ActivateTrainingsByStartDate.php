@@ -27,8 +27,16 @@ class ActivateTrainingsByStartDate implements ShouldBeUnique, ShouldQueue
         GlobalTraining::query()
             ->whereNowOrPast('start_date')
             ->where('active', false)
+            ->where('deactivated', false)
+            ->where('end_date', '>=', now())
             ->lazyById(100, column: 'id')
-            ->each->update(['active' => true]);
+            ->each(function (GlobalTraining $training) {
+                Log::info('Activating training: '.$training->id);
+
+                $training->update(['active' => true]);
+
+                Log::info('Training activated: '.$training->id);
+            });
 
         Log::info('Activated trainings by start date');
     }

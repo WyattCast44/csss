@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->boolean('active')->default(true);
+            $table->boolean('deactivated')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

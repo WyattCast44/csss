@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\OrganizationResource\Pages;
+use App\Filament\Admin\Resources\OrganizationResource\RelationManagers\ChildrenRelationManager;
 use App\Models\Organization;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -132,7 +133,8 @@ class OrganizationResource extends Resource
                 TextColumn::make('parent.abbr')
                     ->searchable()
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->hiddenOn(ChildrenRelationManager::class),
                 IconColumn::make('approved')
                     ->boolean(),
                 TextColumn::make('email')
@@ -167,6 +169,7 @@ class OrganizationResource extends Resource
                 TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -191,6 +194,7 @@ class OrganizationResource extends Resource
         return [
             'index' => Pages\ListOrganizations::route('/'),
             'create' => Pages\CreateOrganization::route('/create'),
+            'view' => Pages\ViewOrganization::route('/{record}'),
             'edit' => Pages\EditOrganization::route('/{record}/edit'),
         ];
     }

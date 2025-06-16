@@ -35,6 +35,7 @@ class GlobalTraining extends Model
         'start_date',
         'end_date',
         'active',
+        'deactivated',
     ];
 
     protected $casts = [

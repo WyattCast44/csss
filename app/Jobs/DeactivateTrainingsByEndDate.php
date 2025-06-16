@@ -22,21 +22,23 @@ class DeactivateTrainingsByEndDate implements ShouldBeUnique, ShouldQueue
 
     public function handle(): void
     {
-        $globalTrainings = GlobalTraining::query()
+        Log::info('Deactivating trainings by end date');
+
+        GlobalTraining::query()
             ->where('end_date', '<=', now())
             ->where('active', true)
-            ->get();
+            ->lazyById(100, column: 'id')
+            ->each(function (GlobalTraining $training) {
+                Log::info('Deactivating training: '.$training->id);
 
-        foreach ($globalTrainings as $training) {
-            Log::info('Deactivating training: '.$training->id);
+                $training->update([
+                    'active' => false,
+                    'deactivated' => true,
+                ]);
 
-            $training->update([
-                'active' => false,
-            ]);
+                Log::info('Training deactivated: '.$training->id);
+            });
 
-            Log::info('Training deactivated: '.$training->id);
-        }
-
-        Log::info('Deactivated '.$globalTrainings->count().' trainings');
+        Log::info('Deactivated trainings by end date');
     }
 }

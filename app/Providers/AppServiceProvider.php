@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 use App\Jobs\ActivateTrainingsByStartDate;
+use App\Jobs\CreatePendingFitnessTests;
 use App\Jobs\DeactivateTrainingsByEndDate;
 use App\Jobs\InprocessInboundUsersByReportDate;
 use App\Jobs\OutprocessOutboundUsersByReportDate;
 use App\Models\AttachedUser;
 use App\Models\Base;
 use App\Models\Branch;
+use App\Models\FitnessTest;
 use App\Models\GlobalTraining;
 use App\Models\InboundUser;
 use App\Models\InboundUserInprocessingAction;
@@ -17,6 +19,7 @@ use App\Models\Organization;
 use App\Models\OrganizationCommand;
 use App\Models\OrganizationLevel;
 use App\Models\OutboundUser;
+use App\Models\PendingFitnessTest;
 use App\Models\ProcessingActionCategory;
 use App\Models\Rank;
 use App\Models\TrainingFormat;
@@ -50,21 +53,23 @@ class AppServiceProvider extends ServiceProvider
     private function configureMorphMaps(): self
     {
         Relation::enforceMorphMap([
-            'training_format' => TrainingFormat::class,
-            'global_training' => GlobalTraining::class,
-            'branch' => Branch::class,
-            'organization_level' => OrganizationLevel::class,
-            'organization' => Organization::class,
             'user' => User::class,
             'rank' => Rank::class,
             'base' => Base::class,
-            'organization_command' => OrganizationCommand::class,
+            'branch' => Branch::class,
             'inbound_user' => InboundUser::class,
-            'inprocessing_action' => InprocessingAction::class,
-            'inbound_user_inprocessing_action' => InboundUserInprocessingAction::class,
+            'organization' => Organization::class,
+            'fitness_test' => FitnessTest::class,
             'outbound_user' => OutboundUser::class,
             'attached_user' => AttachedUser::class,
+            'training_format' => TrainingFormat::class,
+            'global_training' => GlobalTraining::class,
+            'organization_level' => OrganizationLevel::class,
+            'inprocessing_action' => InprocessingAction::class,
+            'pending_fitness_test' => PendingFitnessTest::class,
+            'organization_command' => OrganizationCommand::class,
             'processing_action_category' => ProcessingActionCategory::class,
+            'inbound_user_inprocessing_action' => InboundUserInprocessingAction::class,
         ]);
 
         return $this;
@@ -139,21 +144,24 @@ class AppServiceProvider extends ServiceProvider
 
     private function configureScheduledTasks(): self
     {
-        Schedule::job(new ActivateTrainingsByStartDate)
-            ->everyTwoHours()
-            ->timezone('America/New_York');
+        $jobs = [
+            // Training Jobs
+            ActivateTrainingsByStartDate::class,
+            DeactivateTrainingsByEndDate::class,
 
-        Schedule::job(new DeactivateTrainingsByEndDate)
-            ->everyTwoHours()
-            ->timezone('America/New_York');
+            // In/Outbound User Processing Jobs
+            InprocessInboundUsersByReportDate::class,
+            OutprocessOutboundUsersByReportDate::class,
 
-        Schedule::job(new InprocessInboundUsersByReportDate)
-            ->everyTwoHours()
-            ->withoutOverlapping();
+            // Fitness Test Jobs
+            CreatePendingFitnessTests::class,
+        ];
 
-        Schedule::job(new OutprocessOutboundUsersByReportDate)
-            ->everyTwoHours()
-            ->withoutOverlapping();
+        foreach ($jobs as $job) {
+            Schedule::job($job)
+                ->everyMinute()
+                ->timezone('America/New_York');
+        }
 
         return $this;
     }
