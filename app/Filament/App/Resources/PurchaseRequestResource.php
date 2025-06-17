@@ -37,14 +37,10 @@ class PurchaseRequestResource extends Resource
                     ->maxLength(255),
                 TextInput::make('description')
                     ->maxLength(255),
-                Select::make('category')
-                    ->options([
-                        'equipment' => 'Equipment',
-                        'supplies' => 'Supplies',
-                        'furniture' => 'Furniture',
-                        'electronics' => 'Electronics',
-                    ])
-                    ->required(),
+                Select::make('category_id')
+                    ->relationship('category', 'name')
+                    ->searchable()
+                    ->preload(),
                 TextInput::make('quantity')
                     ->numeric()
                     ->required()
@@ -101,18 +97,25 @@ class PurchaseRequestResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('category')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('category.name')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('quantity')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('unit_price')
                     ->money('USD')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('est_total_price')
                     ->money('USD')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -121,9 +124,13 @@ class PurchaseRequestResource extends Resource
                         'cancelled' => 'gray',
                         'completed' => 'success',
                         default => 'warning',
-                    }),
+                    })
+                    ->sortable()
+                    ->toggleable(),
                 IconColumn::make('requires_contract')
-                    ->boolean(),
+                    ->boolean()
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -167,4 +174,4 @@ class PurchaseRequestResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
-} 
+}

@@ -16,4 +16,4 @@ class ListPurchaseRequests extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
-} 
+}

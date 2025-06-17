@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users'); // the user who is requesting the purchase
             $table->string('name')->nullable();
             $table->string('description')->nullable();
-            $table->string('category')->nullable(); // equipment, supplies, etc. move this to another model in a bit
+            $table->foreignId('category_id')->nullable()->constrained('purchase_categories');
             $table->integer('quantity')->nullable();
             $table->integer('unit_price')->nullable();
             $table->integer('est_total_price')->nullable();

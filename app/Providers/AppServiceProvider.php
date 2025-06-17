@@ -22,6 +22,7 @@ use App\Models\OrganizationLevel;
 use App\Models\OutboundUser;
 use App\Models\PendingFitnessTest;
 use App\Models\ProcessingActionCategory;
+use App\Models\PurchaseCategory;
 use App\Models\PurchaseRequest;
 use App\Models\Rank;
 use App\Models\Room;
@@ -72,6 +73,7 @@ class AppServiceProvider extends ServiceProvider
             'training_format' => TrainingFormat::class,
             'global_training' => GlobalTraining::class,
             'purchase_request' => PurchaseRequest::class,
+            'purchase_category' => PurchaseCategory::class,
             'organization_level' => OrganizationLevel::class,
             'inprocessing_action' => InprocessingAction::class,
             'pending_fitness_test' => PendingFitnessTest::class,

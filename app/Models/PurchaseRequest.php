@@ -27,7 +27,7 @@ class PurchaseRequest extends Model
         'user_id',
         'name',
         'description',
-        'category',
+        'category_id',
         'quantity',
         'unit_price',
         'est_total_price',
@@ -47,6 +47,7 @@ class PurchaseRequest extends Model
     ];
 
     protected $casts = [
+        'category_id' => 'integer',
         'quantity' => 'integer',
         'unit_price' => 'integer',
         'est_total_price' => 'integer',
@@ -67,14 +68,9 @@ class PurchaseRequest extends Model
     | Relationships
     |-------------------------------------
     */
-    public function organization(): BelongsTo
+    public function actionedBy(): BelongsTo
     {
-        return $this->belongsTo(Organization::class);
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'actioned_by_id');
     }
 
     public function building(): BelongsTo
@@ -82,13 +78,23 @@ class PurchaseRequest extends Model
         return $this->belongsTo(Building::class);
     }
 
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseCategory::class);
+    }
+
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
     public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);
     }
 
-    public function actionedBy(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'actioned_by_id');
+        return $this->belongsTo(User::class);
     }
 }
