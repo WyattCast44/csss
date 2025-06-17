@@ -164,6 +164,10 @@ class AppPanelServiceProvider extends PanelProvider
             NavigationGroup::make()
                 ->label('Members'),
             NavigationGroup::make()
+                ->label('Purchasing'),
+            NavigationGroup::make()
+                ->label('Infrastructure'),
+            NavigationGroup::make()
                 ->label('Settings'),
         ]);
 

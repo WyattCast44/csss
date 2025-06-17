@@ -130,6 +130,11 @@ class Organization extends Model implements HasAvatar
         return $this->belongsTo(Organization::class);
     }
 
+    public function purchaseRequests(): HasMany
+    {
+        return $this->hasMany(PurchaseRequest::class);
+    }
+
     public function safes(): HasMany
     {
         return $this->hasMany(Safe::class);
