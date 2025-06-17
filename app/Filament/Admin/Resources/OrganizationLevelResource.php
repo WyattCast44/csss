@@ -2,14 +2,21 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\OrganizationLevelResource\Pages;
+use App\Filament\Admin\Resources\OrganizationLevelResource\Pages\CreateOrganizationLevel;
+use App\Filament\Admin\Resources\OrganizationLevelResource\Pages\EditOrganizationLevel;
+use App\Filament\Admin\Resources\OrganizationLevelResource\Pages\ListOrganizationLevels;
 use App\Models\OrganizationLevel;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,14 +25,14 @@ class OrganizationLevelResource extends Resource
 {
     protected static ?string $model = OrganizationLevel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Metadata';
+    protected static string|\UnitEnum|null $navigationGroup = 'Metadata';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -66,16 +73,16 @@ class OrganizationLevelResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -90,9 +97,9 @@ class OrganizationLevelResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOrganizationLevels::route('/'),
-            'create' => Pages\CreateOrganizationLevel::route('/create'),
-            'edit' => Pages\EditOrganizationLevel::route('/{record}/edit'),
+            'index' => ListOrganizationLevels::route('/'),
+            'create' => CreateOrganizationLevel::route('/create'),
+            'edit' => EditOrganizationLevel::route('/{record}/edit'),
         ];
     }
 

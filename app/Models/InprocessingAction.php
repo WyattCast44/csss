@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
+use Database\Factories\InprocessingActionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +14,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class InprocessingAction extends Model
 {
-    /** @use HasFactory<\Database\Factories\InprocessingActionFactory> */
+    /** @use HasFactory<InprocessingActionFactory> */
     use HasFactory, HasUlids, SoftDeletes;
 
     use LogsActivity;

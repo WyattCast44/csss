@@ -2,17 +2,24 @@
 
 namespace App\Filament\App\Resources;
 
-use App\Filament\App\Resources\AttachedUserResource\Pages;
+use App\Filament\App\Resources\AttachedUserResource\Pages\CreateAttachedUser;
+use App\Filament\App\Resources\AttachedUserResource\Pages\EditAttachedUser;
+use App\Filament\App\Resources\AttachedUserResource\Pages\ListAttachedUsers;
 use App\Models\AttachedUser;
 use App\Models\User;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -22,18 +29,18 @@ class AttachedUserResource extends Resource
 {
     protected static ?string $model = AttachedUser::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $navigationGroup = 'Members';
+    protected static string|\UnitEnum|null $navigationGroup = 'Members';
 
     protected static ?string $navigationLabel = 'Attached Members';
 
     protected static bool $isScopedToTenant = false;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('user_id')
                     ->relationship('user', 'id', modifyQueryUsing: function (Builder $query) {
                         return $query
@@ -104,16 +111,16 @@ class AttachedUserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -128,9 +135,9 @@ class AttachedUserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAttachedUsers::route('/'),
-            'create' => Pages\CreateAttachedUser::route('/create'),
-            'edit' => Pages\EditAttachedUser::route('/{record}/edit'),
+            'index' => ListAttachedUsers::route('/'),
+            'create' => CreateAttachedUser::route('/create'),
+            'edit' => EditAttachedUser::route('/{record}/edit'),
         ];
     }
 

@@ -3,8 +3,8 @@
 namespace App\Filament\Admin\Resources\OrganizationResource\RelationManagers;
 
 use App\Filament\Admin\Resources\OrganizationResource;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 
 class ChildrenRelationManager extends RelationManager
@@ -16,9 +16,9 @@ class ChildrenRelationManager extends RelationManager
         return false;
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return OrganizationResource::form($form);
+        return OrganizationResource::form($schema);
     }
 
     public function table(Table $table): Table

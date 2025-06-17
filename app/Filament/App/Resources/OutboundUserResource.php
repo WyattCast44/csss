@@ -2,18 +2,25 @@
 
 namespace App\Filament\App\Resources;
 
-use App\Filament\App\Resources\OutboundUserResource\Pages;
+use App\Filament\App\Resources\OutboundUserResource\Pages\CreateOutboundUser;
+use App\Filament\App\Resources\OutboundUserResource\Pages\EditOutboundUser;
+use App\Filament\App\Resources\OutboundUserResource\Pages\ListOutboundUsers;
 use App\Models\Organization;
 use App\Models\OutboundUser;
 use App\Models\User;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -22,9 +29,9 @@ class OutboundUserResource extends Resource
 {
     protected static ?string $model = OutboundUser::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-minus';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-minus';
 
-    protected static ?string $navigationGroup = 'Members';
+    protected static string|\UnitEnum|null $navigationGroup = 'Members';
 
     protected static ?string $navigationLabel = 'Outbound';
 
@@ -34,10 +41,10 @@ class OutboundUserResource extends Resource
 
     protected static bool $isScopedToTenant = false;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('user_id')
                     ->relationship('user', 'display_name', modifyQueryUsing: function (Builder $query) {
                         $currentOutboundUsers = OutboundUser::where('organization_id', Filament::getTenant()->id)->pluck('user_id');
@@ -107,16 +114,16 @@ class OutboundUserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -131,9 +138,9 @@ class OutboundUserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOutboundUsers::route('/'),
-            'create' => Pages\CreateOutboundUser::route('/create'),
-            'edit' => Pages\EditOutboundUser::route('/{record}/edit'),
+            'index' => ListOutboundUsers::route('/'),
+            'create' => CreateOutboundUser::route('/create'),
+            'edit' => EditOutboundUser::route('/{record}/edit'),
         ];
     }
 

@@ -16,15 +16,15 @@ class SecurityDashboard extends Page implements HasForms, HasTable
 {
     use InteractsWithForms, InteractsWithTable;
 
-    protected static ?string $navigationIcon = 'heroicon-o-shield-check';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-shield-check';
 
-    protected static string $view = 'filament.app.pages.security-dashboard';
+    protected string $view = 'filament.app.pages.security-dashboard';
 
     protected static ?string $title = 'Unit Security Dashboard';
 
     protected ?string $subheading = 'View unit security status';
 
-    protected static ?string $navigationGroup = 'Dashboards';
+    protected static string|\UnitEnum|null $navigationGroup = 'Dashboards';
 
     protected static ?string $navigationLabel = 'Security Dashboard';
 
@@ -50,10 +50,10 @@ class SecurityDashboard extends Page implements HasForms, HasTable
             ->filters([
                 // ...
             ])
-            ->actions([
+            ->recordActions([
                 // ...
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 // ...
             ]);
     }

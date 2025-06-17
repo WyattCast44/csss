@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\OrganizationCommandResource\Pages;
 
 use App\Filament\Admin\Resources\OrganizationCommandResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListOrganizationCommands extends ListRecords
@@ -13,7 +13,7 @@ class ListOrganizationCommands extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

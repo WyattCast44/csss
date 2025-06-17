@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
+use Database\Factories\BaseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Base extends Model
 {
-    /** @use HasFactory<\Database\Factories\BaseFactory> */
+    /** @use HasFactory<BaseFactory> */
     use HasFactory, HasUlids, SoftDeletes;
 
     use LogsActivity;

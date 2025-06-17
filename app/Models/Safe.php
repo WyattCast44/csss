@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
+use Database\Factories\SafeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Safe extends Model
 {
-    /** @use HasFactory<\Database\Factories\SafeFactory> */
+    /** @use HasFactory<SafeFactory> */
     use HasFactory, HasUlids, SoftDeletes;
 
     use LogsActivity;

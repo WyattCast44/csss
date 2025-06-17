@@ -30,6 +30,7 @@ use App\Models\Safe;
 use App\Models\TrainingFormat;
 use App\Models\User;
 use Carbon\CarbonImmutable;
+use Debugbar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Client\RequestException;
@@ -143,10 +144,10 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($active) {
             /** @phpstan-ignore-next-line */
-            \Debugbar::enable();
+            Debugbar::enable();
         } else {
             /** @phpstan-ignore-next-line */
-            \Debugbar::disable();
+            Debugbar::disable();
         }
 
         return $this;

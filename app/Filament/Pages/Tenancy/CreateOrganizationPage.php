@@ -4,8 +4,8 @@ namespace App\Filament\Pages\Tenancy;
 
 use App\Models\Organization;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Pages\Tenancy\RegisterTenant;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 
 class CreateOrganizationPage extends RegisterTenant
@@ -15,10 +15,10 @@ class CreateOrganizationPage extends RegisterTenant
         return 'Create a new organization';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                     ->label('Unit Name')
                     ->required()

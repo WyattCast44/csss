@@ -2,17 +2,24 @@
 
 namespace App\Filament\App\Resources;
 
-use App\Filament\App\Resources\SafeResource\Pages;
+use App\Filament\App\Resources\SafeResource\Pages\CreateSafe;
+use App\Filament\App\Resources\SafeResource\Pages\EditSafe;
+use App\Filament\App\Resources\SafeResource\Pages\ListSafes;
 use App\Models\Safe;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -21,14 +28,14 @@ class SafeResource extends Resource
 {
     protected static ?string $model = Safe::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-lock-closed';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-lock-closed';
 
-    protected static ?string $navigationGroup = 'Infrastructure';
+    protected static string|\UnitEnum|null $navigationGroup = 'Infrastructure';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -113,16 +120,16 @@ class SafeResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -137,9 +144,9 @@ class SafeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSafes::route('/'),
-            'create' => Pages\CreateSafe::route('/create'),
-            'edit' => Pages\EditSafe::route('/{record}/edit'),
+            'index' => ListSafes::route('/'),
+            'create' => CreateSafe::route('/create'),
+            'edit' => EditSafe::route('/{record}/edit'),
         ];
     }
 

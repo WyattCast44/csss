@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\BranchResource\Pages;
 
 use App\Filament\Admin\Resources\BranchResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditBranch extends EditRecord
@@ -13,7 +13,7 @@ class EditBranch extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

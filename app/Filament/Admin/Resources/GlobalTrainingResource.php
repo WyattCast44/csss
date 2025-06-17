@@ -3,17 +3,24 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\TrainingFrequency;
-use App\Filament\Admin\Resources\GlobalTrainingResource\Pages;
+use App\Filament\Admin\Resources\GlobalTrainingResource\Pages\CreateGlobalTraining;
+use App\Filament\Admin\Resources\GlobalTrainingResource\Pages\EditGlobalTraining;
+use App\Filament\Admin\Resources\GlobalTrainingResource\Pages\ListGlobalTrainings;
 use App\Models\GlobalTraining;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -22,14 +29,14 @@ class GlobalTrainingResource extends Resource
 {
     protected static ?string $model = GlobalTraining::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-academic-cap';
 
-    protected static ?string $navigationGroup = 'Training';
+    protected static string|\UnitEnum|null $navigationGroup = 'Training';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('title')
                     ->required()
                     ->maxLength(255),
@@ -112,16 +119,16 @@ class GlobalTrainingResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -136,9 +143,9 @@ class GlobalTrainingResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGlobalTrainings::route('/'),
-            'create' => Pages\CreateGlobalTraining::route('/create'),
-            'edit' => Pages\EditGlobalTraining::route('/{record}/edit'),
+            'index' => ListGlobalTrainings::route('/'),
+            'create' => CreateGlobalTraining::route('/create'),
+            'edit' => EditGlobalTraining::route('/{record}/edit'),
         ];
     }
 

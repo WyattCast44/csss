@@ -4,17 +4,17 @@ namespace App\Filament\Admin\Resources\OrganizationResource\Pages;
 
 use App\Filament\Admin\Resources\OrganizationResource;
 use App\Filament\Admin\Resources\OrganizationResource\RelationManagers\ChildrenRelationManager;
-use Filament\Actions;
-use Filament\Infolists\Components\Section;
+use Filament\Actions\EditAction;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 
 class ViewOrganization extends ViewRecord
 {
     protected static string $resource = OrganizationResource::class;
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
         return $infolist
             ->schema([
@@ -41,7 +41,7 @@ class ViewOrganization extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            EditAction::make(),
         ];
     }
 }

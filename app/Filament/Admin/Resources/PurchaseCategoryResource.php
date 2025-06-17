@@ -2,16 +2,26 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\PurchaseCategoryResource\Pages;
+use App\Filament\Admin\Resources\PurchaseCategoryResource\Pages\CreatePurchaseCategory;
+use App\Filament\Admin\Resources\PurchaseCategoryResource\Pages\EditPurchaseCategory;
+use App\Filament\Admin\Resources\PurchaseCategoryResource\Pages\ListPurchaseCategories;
 use App\Models\PurchaseCategory;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -20,14 +30,14 @@ class PurchaseCategoryResource extends Resource
 {
     protected static ?string $model = PurchaseCategory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-tag';
 
-    protected static ?string $navigationGroup = 'Purchasing';
+    protected static string|\UnitEnum|null $navigationGroup = 'Purchasing';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -61,19 +71,19 @@ class PurchaseCategoryResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+                ForceDeleteAction::make(),
+                RestoreAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -81,9 +91,9 @@ class PurchaseCategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPurchaseCategories::route('/'),
-            'create' => Pages\CreatePurchaseCategory::route('/create'),
-            'edit' => Pages\EditPurchaseCategory::route('/{record}/edit'),
+            'index' => ListPurchaseCategories::route('/'),
+            'create' => CreatePurchaseCategory::route('/create'),
+            'edit' => EditPurchaseCategory::route('/{record}/edit'),
         ];
     }
 

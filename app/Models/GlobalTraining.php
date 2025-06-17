@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\TrainingFrequency;
 use App\Support\Concerns\HasUlids;
+use Database\Factories\GlobalTrainingFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +14,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class GlobalTraining extends Model
 {
-    /** @use HasFactory<\Database\Factories\GlobalTrainingFactory> */
+    /** @use HasFactory<GlobalTrainingFactory> */
     use HasFactory, HasUlids, SoftDeletes;
 
     use LogsActivity;

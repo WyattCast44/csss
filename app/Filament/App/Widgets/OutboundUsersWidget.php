@@ -3,8 +3,8 @@
 namespace App\Filament\App\Widgets;
 
 use App\Models\OutboundUser;
+use Filament\Actions\EditAction;
 use Filament\Facades\Filament;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -37,7 +37,7 @@ class OutboundUsersWidget extends BaseWidget
                     }),
             ])
             ->defaultSort('losing_date', 'desc')
-            ->actions([
+            ->recordActions([
                 EditAction::make(),
             ])
             ->paginated(false);

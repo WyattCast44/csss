@@ -2,14 +2,21 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\ProcessingActionCategoryResource\Pages;
+use App\Filament\Admin\Resources\ProcessingActionCategoryResource\Pages\CreateProcessingActionCategory;
+use App\Filament\Admin\Resources\ProcessingActionCategoryResource\Pages\EditProcessingActionCategory;
+use App\Filament\Admin\Resources\ProcessingActionCategoryResource\Pages\ListProcessingActionCategories;
 use App\Models\ProcessingActionCategory;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,16 +25,16 @@ class ProcessingActionCategoryResource extends Resource
 {
     protected static ?string $model = ProcessingActionCategory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-tag';
 
     protected static ?string $navigationLabel = 'Action Categories';
 
-    protected static ?string $navigationGroup = 'Metadata';
+    protected static string|\UnitEnum|null $navigationGroup = 'Metadata';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -66,16 +73,16 @@ class ProcessingActionCategoryResource extends Resource
             ])
             ->defaultSort('name')
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -90,9 +97,9 @@ class ProcessingActionCategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProcessingActionCategories::route('/'),
-            'create' => Pages\CreateProcessingActionCategory::route('/create'),
-            'edit' => Pages\EditProcessingActionCategory::route('/{record}/edit'),
+            'index' => ListProcessingActionCategories::route('/'),
+            'create' => CreateProcessingActionCategory::route('/create'),
+            'edit' => EditProcessingActionCategory::route('/{record}/edit'),
         ];
     }
 

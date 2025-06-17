@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\RankType;
 use App\Support\Concerns\HasUlids;
+use Database\Factories\RankFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Rank extends Model
 {
-    /** @use HasFactory<\Database\Factories\RankFactory> */
+    /** @use HasFactory<RankFactory> */
     use HasFactory, HasUlids, SoftDeletes;
 
     use LogsActivity;

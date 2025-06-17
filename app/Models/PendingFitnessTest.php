@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
+use Database\Factories\PendingFitnessTestFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class PendingFitnessTest extends Model
 {
-    /** @use HasFactory<\Database\Factories\PendingFitnessTestFactory> */
+    /** @use HasFactory<PendingFitnessTestFactory> */
     use HasFactory, HasUlids, SoftDeletes;
 
     use LogsActivity;

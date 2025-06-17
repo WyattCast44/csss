@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\ProcessingActionCategoryResource\Pages;
 
 use App\Filament\Admin\Resources\ProcessingActionCategoryResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListProcessingActionCategories extends ListRecords
@@ -13,7 +13,7 @@ class ListProcessingActionCategories extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

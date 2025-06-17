@@ -2,24 +2,32 @@
 
 namespace App\Filament\App\Resources;
 
-use App\Filament\App\Resources\InboundUserResource\Pages;
+use App\Filament\App\Resources\InboundUserResource\Pages\CreateInboundUser;
+use App\Filament\App\Resources\InboundUserResource\Pages\EditInboundUser;
+use App\Filament\App\Resources\InboundUserResource\Pages\ListInboundUsers;
+use App\Filament\App\Resources\InboundUserResource\Pages\ManageInprocessingActions;
+use App\Filament\App\Resources\InboundUserResource\Pages\ViewInboundUser;
 use App\Models\InboundUser;
 use App\Models\Organization;
 use App\Models\User;
 use App\Rules\AllowedEmailDomain;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\EditAction;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -29,9 +37,9 @@ class InboundUserResource extends Resource
 {
     protected static ?string $model = InboundUser::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-plus';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-plus';
 
-    protected static ?string $navigationGroup = 'Members';
+    protected static string|\UnitEnum|null $navigationGroup = 'Members';
 
     protected static ?string $navigationLabel = 'Inbound';
 
@@ -39,10 +47,10 @@ class InboundUserResource extends Resource
 
     protected static bool $isScopedToTenant = false;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('user_id')
                     ->relationship('user', 'display_name', modifyQueryUsing: function (Builder $query) {
                         return $query
@@ -205,9 +213,9 @@ class InboundUserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
+            ->recordActions([
                 Action::make('inprocess')
                     ->visible(fn (InboundUser $record) => $record->inprocess_at === null)
                     ->requiresConfirmation()
@@ -225,11 +233,11 @@ class InboundUserResource extends Resource
                     }),
                 EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -237,20 +245,20 @@ class InboundUserResource extends Resource
     public static function getRecordSubNavigation(Page $page): array
     {
         return $page->generateNavigationItems([
-            Pages\ViewInboundUser::class,
-            Pages\EditInboundUser::class,
-            Pages\ManageInprocessingActions::class,
+            ViewInboundUser::class,
+            EditInboundUser::class,
+            ManageInprocessingActions::class,
         ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListInboundUsers::route('/'),
-            'create' => Pages\CreateInboundUser::route('/create'),
-            'view' => Pages\ViewInboundUser::route('/{record}'),
-            'edit' => Pages\EditInboundUser::route('/{record}/edit'),
-            'inprocessing' => Pages\ManageInprocessingActions::route('/{record}/inprocessing'),
+            'index' => ListInboundUsers::route('/'),
+            'create' => CreateInboundUser::route('/create'),
+            'view' => ViewInboundUser::route('/{record}'),
+            'edit' => EditInboundUser::route('/{record}/edit'),
+            'inprocessing' => ManageInprocessingActions::route('/{record}/inprocessing'),
         ];
     }
 

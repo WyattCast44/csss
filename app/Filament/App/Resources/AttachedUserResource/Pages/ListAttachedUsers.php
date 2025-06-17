@@ -3,7 +3,7 @@
 namespace App\Filament\App\Resources\AttachedUserResource\Pages;
 
 use App\Filament\App\Resources\AttachedUserResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListAttachedUsers extends ListRecords
@@ -13,7 +13,7 @@ class ListAttachedUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

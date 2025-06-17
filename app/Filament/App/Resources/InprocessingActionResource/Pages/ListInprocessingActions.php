@@ -3,7 +3,7 @@
 namespace App\Filament\App\Resources\InprocessingActionResource\Pages;
 
 use App\Filament\App\Resources\InprocessingActionResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListInprocessingActions extends ListRecords
@@ -13,7 +13,7 @@ class ListInprocessingActions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
+use Database\Factories\ProcessingActionCategoryFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class ProcessingActionCategory extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProcessingActionCategoryFactory> */
+    /** @use HasFactory<ProcessingActionCategoryFactory> */
     use HasFactory, HasSlug, HasUlids,SoftDeletes;
 
     use LogsActivity;

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
+use Database\Factories\OutboundUserFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class OutboundUser extends Model
 {
-    /** @use HasFactory<\Database\Factories\OutboundUserFactory> */
+    /** @use HasFactory<OutboundUserFactory> */
     use HasFactory, HasUlids, SoftDeletes;
 
     use LogsActivity;

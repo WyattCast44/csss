@@ -2,18 +2,25 @@
 
 namespace App\Filament\App\Resources;
 
-use App\Filament\App\Resources\InprocessingActionResource\Pages;
+use App\Filament\App\Resources\InprocessingActionResource\Pages\CreateInprocessingAction;
+use App\Filament\App\Resources\InprocessingActionResource\Pages\EditInprocessingAction;
+use App\Filament\App\Resources\InprocessingActionResource\Pages\ListInprocessingActions;
 use App\Models\InprocessingAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -22,14 +29,14 @@ class InprocessingActionResource extends Resource
 {
     protected static ?string $model = InprocessingAction::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static ?string $navigationGroup = 'Settings';
+    protected static string|\UnitEnum|null $navigationGroup = 'Settings';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                     ->label('Action Name')
                     ->required()
@@ -98,16 +105,16 @@ class InprocessingActionResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -122,9 +129,9 @@ class InprocessingActionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListInprocessingActions::route('/'),
-            'create' => Pages\CreateInprocessingAction::route('/create'),
-            'edit' => Pages\EditInprocessingAction::route('/{record}/edit'),
+            'index' => ListInprocessingActions::route('/'),
+            'create' => CreateInprocessingAction::route('/create'),
+            'edit' => EditInprocessingAction::route('/{record}/edit'),
         ];
     }
 

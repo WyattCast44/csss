@@ -6,15 +6,15 @@ use App\Filament\App\Widgets\InboundUsersWidget;
 use App\Filament\App\Widgets\OutboundUsersWidget;
 use App\Filament\App\Widgets\PendingFitnessTestsWidget;
 use Filament\Pages\Dashboard;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 
 class AppDashboard extends Dashboard
 {
     protected static ?string $title = 'Home';
 
-    public function getMaxContentWidth(): MaxWidth
+    public function getMaxContentWidth(): Width
     {
-        return MaxWidth::ScreenTwoExtraLarge;
+        return Width::ScreenTwoExtraLarge;
     }
 
     public function getWidgets(): array

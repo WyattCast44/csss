@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
+use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasTenants;
@@ -26,7 +27,7 @@ class User extends Authenticatable implements FilamentUser, HasName, HasTenants,
 {
     use CausesActivity, LogsActivity;
 
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, HasUlids, Notifiable, SoftDeletes;
 
     const SYSTEM_USER_DODID = '9999999999';

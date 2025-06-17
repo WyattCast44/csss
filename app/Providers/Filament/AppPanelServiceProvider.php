@@ -9,9 +9,8 @@ use App\Filament\Pages\Tenancy\CreateOrganizationPage;
 use App\Filament\Pages\Tenancy\EditOrganizationPage;
 use App\Http\Middleware\ApplyTenantScopes;
 use App\Models\Organization;
-use Asmit\ResizedColumn\ResizedColumnPlugin;
-use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Enums\ThemeMode;
+// use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -20,8 +19,8 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Enums\MaxWidth;
 use Filament\Support\Enums\Platform;
+use Filament\Support\Enums\Width;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -88,7 +87,7 @@ class AppPanelServiceProvider extends PanelProvider
         $panel
             ->sidebarCollapsibleOnDesktop()
             ->defaultThemeMode(ThemeMode::Light)
-            ->maxContentWidth(MaxWidth::SevenExtraLarge)
+            ->maxContentWidth(Width::SevenExtraLarge)
             ->colors([
                 'primary' => Color::Blue,
                 'danger' => Color::Rose,
@@ -181,11 +180,11 @@ class AppPanelServiceProvider extends PanelProvider
         }
 
         $panel->plugins([
-            FilamentDeveloperLoginsPlugin::make()
-                ->enabled(app()->environment('local'))
-                ->users([
-                    'John Doe' => 'john.doe@us.af.mil',
-                ]),
+            // FilamentDeveloperLoginsPlugin::make()
+            //     ->enabled(app()->environment('local'))
+            //     ->users([
+            //         'John Doe' => 'john.doe@us.af.mil',
+            //     ]),
         ]);
 
         return $this;
@@ -194,7 +193,7 @@ class AppPanelServiceProvider extends PanelProvider
     private function configurePlugins(Panel $panel): self
     {
         $panel->plugins([
-            ResizedColumnPlugin::make(),
+            //
         ]);
 
         return $this;

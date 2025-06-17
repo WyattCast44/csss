@@ -2,14 +2,21 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\OrganizationCommandResource\Pages;
+use App\Filament\Admin\Resources\OrganizationCommandResource\Pages\CreateOrganizationCommand;
+use App\Filament\Admin\Resources\OrganizationCommandResource\Pages\EditOrganizationCommand;
+use App\Filament\Admin\Resources\OrganizationCommandResource\Pages\ListOrganizationCommands;
 use App\Models\OrganizationCommand;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,14 +25,14 @@ class OrganizationCommandResource extends Resource
 {
     protected static ?string $model = OrganizationCommand::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-shield-check';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-shield-check';
 
-    protected static ?string $navigationGroup = 'Metadata';
+    protected static string|\UnitEnum|null $navigationGroup = 'Metadata';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255)
@@ -68,16 +75,16 @@ class OrganizationCommandResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -85,9 +92,9 @@ class OrganizationCommandResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOrganizationCommands::route('/'),
-            'create' => Pages\CreateOrganizationCommand::route('/create'),
-            'edit' => Pages\EditOrganizationCommand::route('/{record}/edit'),
+            'index' => ListOrganizationCommands::route('/'),
+            'create' => CreateOrganizationCommand::route('/create'),
+            'edit' => EditOrganizationCommand::route('/{record}/edit'),
         ];
     }
 

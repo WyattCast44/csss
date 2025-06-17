@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
+use Database\Factories\OrganizationCommandFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class OrganizationCommand extends Model
 {
-    /** @use HasFactory<\Database\Factories\OrganizationCommandFactory> */
+    /** @use HasFactory<OrganizationCommandFactory> */
     use HasFactory, HasUlids, SoftDeletes;
 
     use LogsActivity;

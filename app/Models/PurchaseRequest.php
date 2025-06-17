@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
+use Database\Factories\PurchaseRequestFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class PurchaseRequest extends Model
 {
-    /** @use HasFactory<\Database\Factories\PurchaseRequestFactory> */
+    /** @use HasFactory<PurchaseRequestFactory> */
     use HasFactory, HasUlids, SoftDeletes;
 
     use LogsActivity;
