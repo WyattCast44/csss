@@ -4,6 +4,7 @@ namespace App\Filament\App\Resources;
 
 use App\Filament\App\Resources\SafeResource\Pages;
 use App\Models\Safe;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -47,7 +48,21 @@ class SafeResource extends Resource
                     ->default(1),
                 TextInput::make('grade')
                     ->maxLength(255),
-                TextInput::make('drawers'),
+                Repeater::make('drawers')
+                    ->label('Drawers')
+                    ->collapsible()
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Drawer Name')
+                            ->helperText('For example: SEC-01, SEC-02, etc.')
+                            ->required(),
+                        TextInput::make('number')
+                            ->label('Drawer #')
+                            ->helperText('For example: 1, 2, 3, etc.')
+                            ->required(),
+                    ])
+                    ->columns(2),
                 Toggle::make('active')
                     ->required(),
             ]);
