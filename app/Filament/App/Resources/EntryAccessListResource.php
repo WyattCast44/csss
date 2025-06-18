@@ -2,15 +2,20 @@
 
 namespace App\Filament\App\Resources;
 
-use App\Filament\App\Resources\RoomResource\Pages\CreateRoom;
-use App\Filament\App\Resources\RoomResource\Pages\EditRoom;
-use App\Filament\App\Resources\RoomResource\Pages\ListRooms;
-use App\Models\Room;
+use App\Filament\App\Resources\EntryAccessListResource\Pages\CreateEntryAccessList;
+use App\Filament\App\Resources\EntryAccessListResource\Pages\EditEntryAccessList;
+use App\Filament\App\Resources\EntryAccessListResource\Pages\ListEntryAccessLists;
+use App\Models\EntryAccessList;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -23,35 +28,36 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class RoomResource extends Resource
+class EntryAccessListResource extends Resource
 {
-    protected static ?string $model = Room::class;
+    protected static ?string $model = EntryAccessList::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-squares-2x2';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-check';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Infrastructure';
+    protected static string|\UnitEnum|null $navigationGroup = 'Access Control';
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Select::make('building_id')
-                    ->relationship('building', 'name'),
-                TextInput::make('number')
-                    ->label('Room #')
-                    ->required()
-                    ->maxLength(255),
                 TextInput::make('name')
-                    ->label('Room Name')
                     ->required()
                     ->maxLength(255),
                 TextInput::make('description')
                     ->maxLength(255),
+                Select::make('building_id')
+                    ->relationship('building', 'name')
+                    ->searchable()
+                    ->preload(),
+                Select::make('room_id')
+                    ->relationship('room', 'name')
+                    ->searchable()
+                    ->preload(),
+                DatePicker::make('start_date'),
+                DatePicker::make('end_date'),
                 Toggle::make('active')
                     ->required(),
-                Toggle::make('has_eal')
-                    ->required(),
-                Toggle::make('has_safes')
+                Toggle::make('locked')
                     ->required(),
             ]);
     }
@@ -60,25 +66,23 @@ class RoomResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('number')
-                    ->label('Room #')
+                TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('building.name')
-                    ->numeric()
+                    ->searchable()
                     ->sortable(),
-                TextColumn::make('name')
-                    ->label('Room Name')
-                    ->searchable(),
-                TextColumn::make('building.base.abbr')
-                    ->numeric()
+                TextColumn::make('room.name')
+                    ->searchable()
                     ->sortable(),
-                IconColumn::make('has_eal')
-                    ->label('Has EAL')
-                    ->boolean(),
-                IconColumn::make('has_safes')
-                    ->label('Has Safes')
-                    ->boolean(),
+                TextColumn::make('start_date')
+                    ->date()
+                    ->sortable(),
+                TextColumn::make('end_date')
+                    ->date()
+                    ->sortable(),
                 IconColumn::make('active')
+                    ->boolean(),
+                IconColumn::make('locked')
                     ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -88,16 +92,12 @@ class RoomResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                EditAction::make(),
+                ViewAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -108,19 +108,12 @@ class RoomResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
-            'index' => ListRooms::route('/'),
-            'create' => CreateRoom::route('/create'),
-            'edit' => EditRoom::route('/{record}/edit'),
+            'index' => ListEntryAccessLists::route('/'),
+            'create' => CreateEntryAccessList::route('/create'),
+            'edit' => EditEntryAccessList::route('/{record}/edit'),
         ];
     }
 
@@ -131,4 +124,4 @@ class RoomResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
-}
+} 

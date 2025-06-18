@@ -2,15 +2,14 @@
 
 namespace App\Filament\App\Resources;
 
+use App\Filament\App\Resources\SafeResource\Exporters\SafeExporter;
 use App\Filament\App\Resources\SafeResource\Pages\CreateSafe;
 use App\Filament\App\Resources\SafeResource\Pages\EditSafe;
 use App\Filament\App\Resources\SafeResource\Pages\ListSafes;
 use App\Models\Safe;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ForceDeleteBulkAction;
-use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ExportAction as ActionsExportAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -125,12 +124,13 @@ class SafeResource extends Resource
             ->recordActions([
                 EditAction::make(),
             ])
+            ->headerActions([
+                ActionsExportAction::make()
+                    ->exporter(SafeExporter::class),
+            ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
-                ]),
+                ExportBulkAction::make()
+                    ->exporter(SafeExporter::class),
             ]);
     }
 

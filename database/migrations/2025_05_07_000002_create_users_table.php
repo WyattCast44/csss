@@ -46,6 +46,9 @@ return new class extends Migration
                 'CONCAT_WS(" ", CONCAT(last_name, ", ", first_name), CONCAT(LEFT(IFNULL(middle_name, ""), 1), IF(middle_name IS NOT NULL, ".", "")))'
             );
 
+            // filament 2fa
+            $table->boolean('has_email_authentication')->default(false);
+
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

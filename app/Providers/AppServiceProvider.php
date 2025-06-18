@@ -11,6 +11,7 @@ use App\Models\AttachedUser;
 use App\Models\Base;
 use App\Models\Branch;
 use App\Models\Building;
+use App\Models\EntryAccessList;
 use App\Models\FitnessTest;
 use App\Models\GlobalTraining;
 use App\Models\InboundUser;
@@ -74,6 +75,7 @@ class AppServiceProvider extends ServiceProvider
             'training_format' => TrainingFormat::class,
             'global_training' => GlobalTraining::class,
             'purchase_request' => PurchaseRequest::class,
+            'entry_access_list' => EntryAccessList::class,
             'purchase_category' => PurchaseCategory::class,
             'organization_level' => OrganizationLevel::class,
             'inprocessing_action' => InprocessingAction::class,

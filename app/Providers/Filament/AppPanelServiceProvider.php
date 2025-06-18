@@ -4,11 +4,13 @@ namespace App\Providers\Filament;
 
 use App\Filament\App\Pages\AppDashboard;
 use App\Filament\Pages\Auth\EditProfile;
+use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\Register;
 use App\Filament\Pages\Tenancy\CreateOrganizationPage;
 use App\Filament\Pages\Tenancy\EditOrganizationPage;
 use App\Http\Middleware\ApplyTenantScopes;
 use App\Models\Organization;
+use Filament\Auth\MultiFactor\Email\EmailAuthentication;
 use Filament\Enums\ThemeMode;
 // use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -118,7 +120,12 @@ class AppPanelServiceProvider extends PanelProvider
             ->registration(Register::class)
             ->passwordReset()
             ->emailVerification()
-            ->profile(EditProfile::class, isSimple: true);
+            ->login(Login::class)
+            ->profile(EditProfile::class, isSimple: true)
+            ->multiFactorAuthentication([
+                EmailAuthentication::make()
+                    ->codeExpiryMinutes(5),
+            ], isRequired: true);
 
         return $this;
     }

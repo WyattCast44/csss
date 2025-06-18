@@ -63,11 +63,10 @@ class UserResource extends Resource
                 TextInput::make('email')
                     ->email()
                     ->maxLength(255)
-                    ->required()
                     ->unique(ignoreRecord: true)
                     ->rules([
                         new AllowedEmailDomain,
-                    ])->disabled(),
+                    ]),
                 Select::make('branch_id')
                     ->relationship('branch', 'name')
                     ->required(),

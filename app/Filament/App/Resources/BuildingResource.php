@@ -44,7 +44,9 @@ class BuildingResource extends Resource
                 TextInput::make('address')
                     ->maxLength(255),
                 Select::make('base_id')
-                    ->relationship('base', 'name'),
+                    ->relationship('base', 'name')
+                    ->searchable()
+                    ->preload(),
                 TextInput::make('description')
                     ->maxLength(255),
                 Toggle::make('active')

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
 use Database\Factories\UserFactory;
+use Filament\Auth\MultiFactor\Email\Contracts\HasEmailAuthentication;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasTenants;
@@ -23,7 +24,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class User extends Authenticatable implements FilamentUser, HasName, HasTenants, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasName, HasTenants, MustVerifyEmail, HasEmailAuthentication
 {
     use CausesActivity, LogsActivity;
 
@@ -56,6 +57,7 @@ class User extends Authenticatable implements FilamentUser, HasName, HasTenants,
         'job_duty_code',
         'personal_organization_id',
         'current_organization_id',
+        'has_email_authentication',
     ];
 
     protected $hidden = [
@@ -75,6 +77,7 @@ class User extends Authenticatable implements FilamentUser, HasName, HasTenants,
             'personal_organization_id' => 'integer',
             'current_organization_id' => 'integer',
             'email_verified' => 'boolean',
+            'has_email_authentication' => 'boolean',
         ];
     }
 
@@ -153,6 +156,22 @@ class User extends Authenticatable implements FilamentUser, HasName, HasTenants,
     public function isAdmin(): bool
     {
         return true;
+    }
+
+    public function hasEmailAuthentication(): bool
+    {
+        if(app()->environment('local')) {
+            return true;
+        }
+
+        return $this->has_email_authentication;
+    }
+
+    public function toggleEmailAuthentication(bool $condition): void
+    {
+        $this->update([
+            'has_email_authentication' => $condition,
+        ]);
     }
 
     /*
