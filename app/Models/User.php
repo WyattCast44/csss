@@ -24,7 +24,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class User extends Authenticatable implements FilamentUser, HasName, HasTenants, MustVerifyEmail, HasEmailAuthentication
+class User extends Authenticatable implements FilamentUser, HasEmailAuthentication, HasName, HasTenants, MustVerifyEmail
 {
     use CausesActivity, LogsActivity;
 
@@ -160,7 +160,7 @@ class User extends Authenticatable implements FilamentUser, HasName, HasTenants,
 
     public function hasEmailAuthentication(): bool
     {
-        if(app()->environment('local')) {
+        if (app()->environment('local')) {
             return true;
         }
 
@@ -218,6 +218,13 @@ class User extends Authenticatable implements FilamentUser, HasName, HasTenants,
     public function rank(): BelongsTo
     {
         return $this->belongsTo(Rank::class);
+    }
+
+    public function entryAccessLists(): BelongsToMany
+    {
+        return $this->belongsToMany(EntryAccessList::class)
+            ->withPivot(['added_by_user_id', 'added_at', 'removed_at', 'removed_by_user_id', 'notes'])
+            ->withTimestamps();
     }
 
     /*

@@ -64,7 +64,7 @@ class PurchaseCategoryResource extends Resource
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -75,9 +75,6 @@ class PurchaseCategoryResource extends Resource
             ])
             ->recordActions([
                 EditAction::make(),
-                DeleteAction::make(),
-                ForceDeleteAction::make(),
-                RestoreAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

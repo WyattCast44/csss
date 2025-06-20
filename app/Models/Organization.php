@@ -111,6 +111,11 @@ class Organization extends Model implements HasAvatar
         return $this->belongsTo(OrganizationCommand::class);
     }
 
+    public function entryAccessLists(): HasMany
+    {
+        return $this->hasMany(EntryAccessList::class);
+    }
+
     public function inboundUsers(): HasMany
     {
         return $this->hasMany(InboundUser::class);

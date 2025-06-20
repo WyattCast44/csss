@@ -20,4 +20,4 @@ class EditEntryAccessList extends EditRecord
             RestoreAction::make(),
         ];
     }
-} 
+}

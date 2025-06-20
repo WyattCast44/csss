@@ -29,13 +29,17 @@ return new class extends Migration
         $usaf = Branch::where('abbr', 'USAF')->firstOrFail();
 
         $commands = [
-            ['name' => 'Air Force Global Strike Command', 'abbr' => 'AFGSC'],
             ['name' => 'Air Force Special Operations Command', 'abbr' => 'AFSOC'],
-            ['name' => 'Air Combat Command', 'abbr' => 'ACC'],
             ['name' => 'Air Education and Training Command', 'abbr' => 'AETC'],
+            ['name' => 'Air Force Global Strike Command', 'abbr' => 'AFGSC'],
             ['name' => 'Air Force Materiel Command', 'abbr' => 'AFMC'],
             ['name' => 'Air Force Reserve Command', 'abbr' => 'AFRC'],
             ['name' => 'Air Force Space Command', 'abbr' => 'AFSPC'],
+            ['name' => 'Air Mobility Command', 'abbr' => 'AMC'],
+            ['name' => 'Pacific Air Forces', 'abbr' => 'PACAF'],
+            ['name' => 'Air Combat Command', 'abbr' => 'ACC'],
+            ['name' => 'Not Applicable', 'abbr' => 'N/A'],
+            ['name' => 'Other', 'abbr' => 'OTH'],
         ];
 
         foreach ($commands as $command) {

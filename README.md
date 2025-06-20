@@ -46,10 +46,23 @@ php artisan migrate:fresh --seed
 yarn dev
 ```
 
+### Start dev processes
+
+Start the queue worker in listen mode: 
+
+```bash
+php artisan queue:listen
+```
+
+Start the scheduler:
+
+```bash
+php artisan schedule:work
+```
+
 # Production Deployment Considerations
 
 - Enable OP-Cache
-
 
 ```bash
 # clear old optimizations
@@ -61,9 +74,16 @@ php artisan optimize
 php artisan filament:optimize
 ```
 
-
 # Packages
 
 - https://filamentphp.com/plugins/eightynine-reports
 - https://filamentphp.com/plugins/awcodes-recently
 - https://www.reddit.com/r/laravel/comments/18x7wix/how_to_fill_out_existing_pdf/
+
+# Notes
+
+- new system?
+- A user can: 
+-- only be an active member of 1 organization at a time
+-- only be an outbound member of 1 organization at a time
+-- only be an inbound member of 1 organization at a time

@@ -115,6 +115,8 @@ class AppPanelServiceProvider extends PanelProvider
 
     private function configureAuthenticationFeatures(Panel $panel): self
     {
+        $isRequired = app()->environment('local') ? false : true;
+        
         $panel
             ->login()
             ->registration(Register::class)
@@ -125,7 +127,7 @@ class AppPanelServiceProvider extends PanelProvider
             ->multiFactorAuthentication([
                 EmailAuthentication::make()
                     ->codeExpiryMinutes(5),
-            ], isRequired: true);
+            ], isRequired: $isRequired);
 
         return $this;
     }

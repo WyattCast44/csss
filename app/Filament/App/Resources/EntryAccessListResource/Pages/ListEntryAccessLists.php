@@ -16,4 +16,4 @@ class ListEntryAccessLists extends ListRecords
             CreateAction::make(),
         ];
     }
-} 
+}

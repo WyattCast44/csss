@@ -8,4 +8,4 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateEntryAccessList extends CreateRecord
 {
     protected static string $resource = EntryAccessListResource::class;
-} 
+}

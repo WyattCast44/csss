@@ -54,6 +54,11 @@ return new class extends Migration
                 'branch_id' => $branch->id,
             ],
             [
+                'name' => 'Combatant Command',
+                'abbr' => 'CCMD',
+                'branch_id' => $branch->id,
+            ],
+            [
                 'name' => 'Numbered Air Force',
                 'abbr' => 'NAF',
                 'branch_id' => $branch->id,

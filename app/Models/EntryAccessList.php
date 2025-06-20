@@ -6,6 +6,7 @@ use App\Support\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -61,7 +62,7 @@ class EntryAccessList extends Model
     {
         return $this->belongsTo(User::class, 'created_by_user_id');
     }
-    
+
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
@@ -70,5 +71,12 @@ class EntryAccessList extends Model
     public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot(['added_by_user_id', 'added_at', 'removed_at', 'removed_by_user_id', 'notes'])
+            ->withTimestamps();
     }
 }
