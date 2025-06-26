@@ -144,8 +144,11 @@ class AppServiceProvider extends ServiceProvider
 
     private function configureDebugbar(bool $active = false): self
     {
+        if(!class_exists(Debugbar::class)) { 
+            return $this;
+        }
+
         if ($active) {
-            /** @phpstan-ignore-next-line */
             Debugbar::enable();
         } else {
             /** @phpstan-ignore-next-line */

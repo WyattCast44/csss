@@ -2,23 +2,16 @@
 
 namespace App\Filament\App\Resources\EntryAccessListResource\RelationManagers;
 
-use App\Models\AttachedUser;
-use App\Models\InboundUser;
 use Filament\Actions\AttachAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DetachAction;
 use Filament\Actions\DetachBulkAction;
-use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UsersRelationManager extends RelationManager
 {
@@ -74,4 +67,4 @@ class UsersRelationManager extends RelationManager
                 ]),
             ]);
     }
-} 
+}

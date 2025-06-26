@@ -7,6 +7,7 @@ use App\Filament\App\Resources\UserResource\Pages\EditUser;
 use App\Filament\App\Resources\UserResource\Pages\ListUsers;
 use App\Models\User;
 use App\Rules\AllowedEmailDomain;
+use App\Support\Traits\HasOrganizationPermissions;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -22,10 +23,13 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
 {
+    use HasOrganizationPermissions;
+
     protected static ?string $model = User::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
@@ -37,6 +41,56 @@ class UserResource extends Resource
     protected static ?string $modelLabel = 'Member';
 
     protected static bool $isScopedToTenant = false;
+
+    public static function canViewAny(): bool
+    {
+        return (new static)->checkPermission('user:view');
+    }
+
+    public static function canCreate(): bool
+    {
+        return (new static)->checkPermission('user:create');
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return (new static)->checkPermission('user:update');
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return (new static)->checkPermission('user:delete');
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return (new static)->checkPermission('user:delete');
+    }
+
+    public static function canForceDelete(Model $record): bool
+    {
+        return (new static)->checkPermission('user:delete');
+    }
+
+    public static function canForceDeleteAny(): bool
+    {
+        return (new static)->checkPermission('user:delete');
+    }
+
+    public static function canRestore(Model $record): bool
+    {
+        return (new static)->checkPermission('user:update');
+    }
+
+    public static function canRestoreAny(): bool
+    {
+        return (new static)->checkPermission('user:update');
+    }
+
+    public static function canExport(): bool
+    {
+        return (new static)->checkPermission('user:export');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -139,13 +193,17 @@ class UserResource extends Resource
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->visible(fn (User $record): bool => static::canEdit($record)),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn (): bool => static::canDeleteAny()),
+                    ForceDeleteBulkAction::make()
+                        ->visible(fn (): bool => static::canForceDeleteAny()),
+                    RestoreBulkAction::make()
+                        ->visible(fn (): bool => static::canRestoreAny()),
                 ]),
             ])->modifyQueryUsing(function (Builder $query) {
                 return $query->whereHas('organizations', function (Builder $query) {

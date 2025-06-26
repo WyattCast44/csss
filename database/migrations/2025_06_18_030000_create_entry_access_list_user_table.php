@@ -28,4 +28,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('entry_access_list_user');
     }
-}; 
+};

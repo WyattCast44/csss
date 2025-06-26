@@ -23,6 +23,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser, HasEmailAuthentication, HasName, HasTenants, MustVerifyEmail
 {
@@ -30,6 +31,8 @@ class User extends Authenticatable implements FilamentUser, HasEmailAuthenticati
 
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasUlids, Notifiable, SoftDeletes;
+
+    use HasRoles;
 
     const SYSTEM_USER_DODID = '9999999999';
 
@@ -89,6 +92,7 @@ class User extends Authenticatable implements FilamentUser, HasEmailAuthenticati
     {
         static::created(function (User $user) {
             $user->createPersonalOrganization();
+            $user->assignRole('Member');
         });
     }
 
@@ -155,7 +159,7 @@ class User extends Authenticatable implements FilamentUser, HasEmailAuthenticati
 
     public function isAdmin(): bool
     {
-        return true;
+        return $this->hasRole('Super Admin');
     }
 
     public function hasEmailAuthentication(): bool

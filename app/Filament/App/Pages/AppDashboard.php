@@ -22,7 +22,7 @@ class AppDashboard extends Dashboard
         $widgets = [
             InboundUsersWidget::class,
             OutboundUsersWidget::class,
-            PendingFitnessTestsWidget::class,
+            //PendingFitnessTestsWidget::class,
         ];
 
         $widgets = array_filter($widgets, function ($widget) {
