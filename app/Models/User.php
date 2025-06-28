@@ -4,12 +4,10 @@ namespace App\Models;
 
 use App\Support\Concerns\HasUlids;
 use Database\Factories\UserFactory;
-use Filament\Auth\MultiFactor\Email\Contracts\HasEmailAuthentication;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,7 +23,7 @@ use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser, HasEmailAuthentication, HasName, HasTenants, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasName, HasTenants
 {
     use CausesActivity, LogsActivity;
 
@@ -150,17 +148,17 @@ class User extends Authenticatable implements FilamentUser, HasEmailAuthenticati
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'app') {
-            return true;
+            return true; // TODO: Decide if we want to allow non-admin users to access the app panel
         }
 
         if ($panel->getId() === 'admin') {
-            return true;
+            return true; // TODO: remove this
 
-            return $this->isAdmin();
+            // return $this->isAdmin();
         }
 
         if ($panel->getId() === 'personal') {
-            return true;
+            return true; // every user should have access to their personal panel
         }
 
         return false;
@@ -174,22 +172,6 @@ class User extends Authenticatable implements FilamentUser, HasEmailAuthenticati
     public function isAdmin(): bool
     {
         return $this->hasRole('Super Admin');
-    }
-
-    public function hasEmailAuthentication(): bool
-    {
-        if (app()->environment('local')) {
-            return true;
-        }
-
-        return $this->has_email_authentication;
-    }
-
-    public function toggleEmailAuthentication(bool $condition): void
-    {
-        $this->update([
-            'has_email_authentication' => $condition,
-        ]);
     }
 
     /*

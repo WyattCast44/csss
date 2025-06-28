@@ -3,9 +3,6 @@
 namespace App\Providers\Filament;
 
 use App\Filament\App\Pages\AppDashboard;
-use App\Filament\Pages\Auth\EditProfile;
-use App\Filament\Pages\Auth\Login;
-use App\Filament\Pages\Auth\Register;
 use App\Filament\Pages\Tenancy\CreateOrganizationPage;
 use App\Filament\Pages\Tenancy\EditOrganizationPage;
 use App\Http\Middleware\ApplyTenantScopes;
@@ -114,7 +111,7 @@ class AppPanelServiceProvider extends PanelProvider
     private function configureAuthenticationFeatures(Panel $panel): self
     {
         $panel->login();
-        
+
         return $this;
     }
 
