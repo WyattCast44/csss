@@ -115,7 +115,6 @@ class PersonalPanelServiceProvider extends PanelProvider
             ->login()
             ->registration(Register::class)
             ->passwordReset()
-            ->emailVerification()
             ->login(Login::class)
             ->profile(EditProfile::class, isSimple: true);
 
