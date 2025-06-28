@@ -113,14 +113,8 @@ class AppPanelServiceProvider extends PanelProvider
 
     private function configureAuthenticationFeatures(Panel $panel): self
     {
-        $isRequired = app()->environment('local') ? false : true;
-
-        $panel
-            ->login()
-            ->passwordReset()
-            ->emailVerification()
-            ->login(Login::class);
-
+        $panel->login();
+        
         return $this;
     }
 

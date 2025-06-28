@@ -49,7 +49,7 @@ class PersonalPanelServiceProvider extends PanelProvider
         $panel
             ->default()
             ->id('personal')
-            ->path('personal')
+            ->path('')
             ->spa();
 
         $panel->pages([
@@ -109,8 +109,6 @@ class PersonalPanelServiceProvider extends PanelProvider
 
     private function configureAuthenticationFeatures(Panel $panel): self
     {
-        $isRequired = app()->environment('local') ? false : true;
-
         $panel
             ->login()
             ->registration(Register::class)
