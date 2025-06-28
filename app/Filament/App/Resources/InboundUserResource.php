@@ -11,6 +11,7 @@ use App\Models\InboundUser;
 use App\Models\Organization;
 use App\Models\User;
 use App\Rules\AllowedEmailDomain;
+use App\Rules\ValidDodId;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -70,6 +71,9 @@ class InboundUserResource extends Resource
                             ->nullable()
                             ->maxLength(10)
                             ->unique('users', 'dodid')
+                            ->rules([
+                                new ValidDodId,
+                            ])
                             ->validationMessages([
                                 'unique' => 'DOD ID has already been registered.',
                             ]),

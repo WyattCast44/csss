@@ -24,6 +24,8 @@ return new class extends Migration
             $table->json('attachments')->nullable();
             $table->date('next_test_date')->nullable();
             $table->boolean('next_test_created')->default(false);
+            $table->foreignId('next_test_id')->nullable();
+            $table->foreignId('input_by_id')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

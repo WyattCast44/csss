@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages\Auth;
 
+use App\Rules\ValidDodId;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -29,6 +30,9 @@ class EditProfile extends \Filament\Auth\Pages\EditProfile
             ->label('DoD ID')
             ->disabled()
             ->readOnly()
+            ->rules([
+                new ValidDodId,
+            ])
             ->required();
     }
 

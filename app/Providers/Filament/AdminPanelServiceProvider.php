@@ -54,7 +54,6 @@ class AdminPanelServiceProvider extends PanelProvider
     private function configurePanel(Panel $panel): self
     {
         $panel
-            ->default()
             ->id('admin')
             ->path('admin')
             ->spa();

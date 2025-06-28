@@ -10,7 +10,6 @@ use App\Filament\Pages\Tenancy\CreateOrganizationPage;
 use App\Filament\Pages\Tenancy\EditOrganizationPage;
 use App\Http\Middleware\ApplyTenantScopes;
 use App\Models\Organization;
-use Filament\Auth\MultiFactor\Email\EmailAuthentication;
 use Filament\Enums\ThemeMode;
 // use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -56,7 +55,6 @@ class AppPanelServiceProvider extends PanelProvider
     private function configurePanel(Panel $panel): self
     {
         $panel
-            ->default()
             ->id('app')
             ->path('app')
             ->spa();
@@ -123,11 +121,7 @@ class AppPanelServiceProvider extends PanelProvider
             ->passwordReset()
             ->emailVerification()
             ->login(Login::class)
-            ->profile(EditProfile::class, isSimple: true)
-            ->multiFactorAuthentication([
-                EmailAuthentication::make()
-                    ->codeExpiryMinutes(5),
-            ], isRequired: $isRequired);
+            ->profile(EditProfile::class, isSimple: true);
 
         return $this;
     }

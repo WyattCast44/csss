@@ -180,4 +180,9 @@ class Organization extends Model implements HasAvatar
     {
         return $query->where('personal', false);
     }
+
+    public static function getSystemOrganization(): self
+    {
+        return self::where('abbr', 'SYS')->first();
+    }
 }

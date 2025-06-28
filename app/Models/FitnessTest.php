@@ -35,12 +35,16 @@ class FitnessTest extends Model
         'attachments',
         'next_test_date',
         'next_test_created',
+        'next_test_id',
+        'input_by_id',
     ];
 
     protected $casts = [
         'results' => 'array',
         'attachments' => 'array',
         'next_test_created' => 'boolean',
+        'next_test_id' => 'integer',
+        'input_by_id' => 'integer',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -50,17 +54,21 @@ class FitnessTest extends Model
 
     /*
     |-------------------------------------
-    | Actions
-    |-------------------------------------
-    */
-
-    /*
-    |-------------------------------------
     | Relationships
     |-------------------------------------
     */
+    public function nextTest(): BelongsTo
+    {
+        return $this->belongsTo(PendingFitnessTest::class, 'next_test_id');
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function inputter(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'input_by_id');
     }
 }

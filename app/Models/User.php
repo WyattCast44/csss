@@ -106,7 +106,6 @@ class User extends Authenticatable implements FilamentUser, HasEmailAuthenticati
     | Accessors
     |-------------------------------------
     */
-
     protected function emailVerified(): Attribute
     {
         return Attribute::make(
@@ -117,6 +116,11 @@ class User extends Authenticatable implements FilamentUser, HasEmailAuthenticati
     public static function getSystemUser(): self
     {
         return self::where('dodid', self::SYSTEM_USER_DODID)->firstOrFail();
+    }
+
+    public function hasPendingFitnessTest(): bool
+    {
+        return $this->pendingFitnessTests()->exists();
     }
 
     /*
@@ -136,7 +140,11 @@ class User extends Authenticatable implements FilamentUser, HasEmailAuthenticati
 
     public function canAccessTenant(Model $tenant): bool
     {
-        return $this->organizations()->whereKey($tenant)->exists();
+        return
+            // if the tenant is in the user's organizations
+            $this->organizations()->whereKey($tenant)->exists() ||
+            // or if the tenant is the user's personal organization
+            ($tenant->personal && $tenant->id === $this->personal_organization_id);
     }
 
     public function canAccessPanel(Panel $panel): bool
@@ -146,7 +154,13 @@ class User extends Authenticatable implements FilamentUser, HasEmailAuthenticati
         }
 
         if ($panel->getId() === 'admin') {
+            return true;
+
             return $this->isAdmin();
+        }
+
+        if ($panel->getId() === 'personal') {
+            return true;
         }
 
         return false;

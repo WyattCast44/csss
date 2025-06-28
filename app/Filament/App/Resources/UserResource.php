@@ -7,6 +7,7 @@ use App\Filament\App\Resources\UserResource\Pages\EditUser;
 use App\Filament\App\Resources\UserResource\Pages\ListUsers;
 use App\Models\User;
 use App\Rules\AllowedEmailDomain;
+use App\Rules\ValidDodId;
 use App\Support\Traits\HasOrganizationPermissions;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -101,6 +102,9 @@ class UserResource extends Resource
                     ->label('DOD ID')
                     ->nullable()
                     ->maxLength(255)
+                    ->rules([
+                        new ValidDodId,
+                    ])
                     ->unique(ignoreRecord: true),
                 TextInput::make('first_name')
                     ->maxLength(255)

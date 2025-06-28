@@ -18,14 +18,31 @@ class RoomFactory extends Factory
      */
     public function definition(): array
     {
+        $number = fake()->numberBetween(1, 1000);
+
         return [
             'organization_id' => Organization::factory(),
-            'name' => fake()->word,
-            'description' => fake()->optional()->sentence,
             'building_id' => Building::factory(),
+            'number' => $number,
+            'name' => 'Room '.$number,
+            'description' => fake()->optional()->sentence,
             'active' => fake()->boolean,
             'has_eal' => fake()->boolean,
             'has_safes' => fake()->boolean,
         ];
+    }
+
+    public function forOrganization(Organization $organization): self
+    {
+        return $this->state(function (array $attributes) use ($organization) {
+            return ['organization_id' => $organization->id];
+        });
+    }
+
+    public function forBuilding(Building $building): self
+    {
+        return $this->state(function (array $attributes) use ($building) {
+            return ['building_id' => $building->id];
+        });
     }
 }

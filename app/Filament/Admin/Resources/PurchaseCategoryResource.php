@@ -38,12 +38,12 @@ class PurchaseCategoryResource extends Resource
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Toggle::make('active')
-                    ->required(),
                 Select::make('organization_id')
                     ->relationship('organization', 'name')
                     ->searchable()
                     ->preload(),
+                Toggle::make('active')
+                    ->required(),
             ]);
     }
 

@@ -7,6 +7,7 @@ use App\Filament\Admin\Resources\UserResource\Pages\EditUser;
 use App\Filament\Admin\Resources\UserResource\Pages\ListUsers;
 use App\Models\User;
 use App\Rules\AllowedEmailDomain;
+use App\Rules\ValidDodId;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -36,7 +37,10 @@ class UserResource extends Resource
                 TextInput::make('dodid')
                     ->required()
                     ->maxLength(10)
-                    ->unique(ignoreRecord: true),
+                    ->unique(ignoreRecord: true)
+                    ->rules([
+                        new ValidDodId,
+                    ]),
                 TextInput::make('first_name')
                     ->maxLength(255)
                     ->required(),

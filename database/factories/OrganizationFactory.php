@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Branch;
 use App\Models\Organization;
+use App\Models\OrganizationCommand;
 use App\Models\OrganizationLevel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,10 +20,25 @@ class OrganizationFactory extends Factory
      */
     public function definition(): array
     {
+        $level = OrganizationLevel::inRandomOrder()->first();
+
+        $number = fake()->numberBetween(11, 999);
+
+        $type = fake()->randomElement([
+            'Attack',
+            'Bomb',
+            'Combat Rescue',
+            'Test and Evaluation',
+            'Training',
+        ]);
+
+        $name = $number.' '.$type.' '.$level->name;
+
+        $abbr = str($name)->limit(8, '')->upper();
+
         return [
-            'name' => fake()->company(),
-            'abbr' => fake()->word(),
-            'slug' => fake()->slug(),
+            'name' => $name,
+            'abbr' => $abbr,
             'description' => fake()->sentence(),
             'pas_codes' => null,
             'mailing_addresses' => null,
@@ -34,7 +50,8 @@ class OrganizationFactory extends Factory
             'approved' => fake()->boolean(),
             'parent_id' => fake()->boolean() ? Organization::factory() : null,
             'branch_id' => Branch::inRandomOrder()->first()->id,
-            'level_id' => OrganizationLevel::inRandomOrder()->first()->id,
+            'level_id' => $level->id,
+            'command_id' => OrganizationCommand::inRandomOrder()->first()->id,
         ];
     }
 
@@ -70,6 +87,13 @@ class OrganizationFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'level_id' => $level->id,
+        ]);
+    }
+
+    public function forCommand(OrganizationCommand $command): Factory
+    {
+        return $this->state(fn (array $attributes) => [
+            'command_id' => $command->id,
         ]);
     }
 }

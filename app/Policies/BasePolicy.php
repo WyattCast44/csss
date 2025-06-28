@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Support\Traits\HasOrganizationPermissions;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-abstract class BasePolicy
+class BasePolicy
 {
     use HandlesAuthorization, HasOrganizationPermissions;
 

@@ -49,6 +49,15 @@ return new class extends Migration
 
     private function seed(): void
     {
+        Organization::create([
+            'name' => 'System',
+            'abbr' => 'SYS',
+            'slug' => 'system',
+            'description' => 'This is the system organization. It is used to store data for the system.',
+            'personal' => false,
+            'approved' => true,
+        ]);
+
         // we need to create a default organization for the system that users can use as a fallback
         Organization::create([
             'name' => 'Not Applicable - Placeholder Organization',

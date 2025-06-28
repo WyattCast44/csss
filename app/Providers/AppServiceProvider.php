@@ -11,6 +11,7 @@ use App\Models\AttachedUser;
 use App\Models\Base;
 use App\Models\Branch;
 use App\Models\Building;
+use App\Models\CommissionSource;
 use App\Models\EntryAccessList;
 use App\Models\FitnessTest;
 use App\Models\GlobalTraining;
@@ -67,9 +68,9 @@ class AppServiceProvider extends ServiceProvider
             'base' => Base::class,
             'branch' => Branch::class,
             'building' => Building::class,
+            'fitness_test' => FitnessTest::class,
             'inbound_user' => InboundUser::class,
             'organization' => Organization::class,
-            'fitness_test' => FitnessTest::class,
             'outbound_user' => OutboundUser::class,
             'attached_user' => AttachedUser::class,
             'training_format' => TrainingFormat::class,
@@ -77,6 +78,7 @@ class AppServiceProvider extends ServiceProvider
             'purchase_request' => PurchaseRequest::class,
             'entry_access_list' => EntryAccessList::class,
             'purchase_category' => PurchaseCategory::class,
+            'commission_source' => CommissionSource::class,
             'organization_level' => OrganizationLevel::class,
             'inprocessing_action' => InprocessingAction::class,
             'pending_fitness_test' => PendingFitnessTest::class,
@@ -144,7 +146,7 @@ class AppServiceProvider extends ServiceProvider
 
     private function configureDebugbar(bool $active = false): self
     {
-        if(!class_exists(Debugbar::class)) { 
+        if (! class_exists(Debugbar::class)) {
             return $this;
         }
 

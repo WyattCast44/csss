@@ -5,6 +5,7 @@ namespace App\Filament\Pages\Auth;
 use App\Models\Branch;
 use App\Models\Rank;
 use App\Rules\AllowedEmailDomain;
+use App\Rules\ValidDodId;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component;
@@ -20,6 +21,9 @@ class Register extends \Filament\Auth\Pages\Register
             ->required()
             ->maxLength(10)
             ->unique('users', 'dodid')
+            ->rules([
+                new ValidDodId,
+            ])
             ->validationMessages([
                 'unique' => 'DOD ID has already been registered.',
             ]);
