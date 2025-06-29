@@ -35,7 +35,6 @@ class AdminPanelServiceProvider extends PanelProvider
             ->configurePanelStyling($panel)
             ->configureDiscovery($panel)
             ->configureAuthenticationFeatures($panel)
-            ->configureTenancy($panel)
             ->configureMiddleware($panel)
             ->configureNavigationGroups($panel)
             ->configureDeveloperTools($panel)
@@ -114,11 +113,6 @@ class AdminPanelServiceProvider extends PanelProvider
     {
         $panel->login();
 
-        return $this;
-    }
-
-    private function configureTenancy(Panel $panel): self
-    {
         return $this;
     }
 

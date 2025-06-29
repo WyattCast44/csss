@@ -27,9 +27,6 @@ class CreateOrganizationPage extends RegisterTenant
                     ->label('Unit Abbreviation')
                     ->required()
                     ->maxLength(255),
-                TextInput::make('description')
-                    ->required()
-                    ->maxLength(255),
             ]);
     }
 

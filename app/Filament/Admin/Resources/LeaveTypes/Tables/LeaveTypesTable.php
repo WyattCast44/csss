@@ -1,35 +1,34 @@
 <?php
 
-namespace App\Filament\Personal\Resources\FitnessTests\Tables;
+namespace App\Filament\Admin\Resources\LeaveTypes\Tables;
 
+use App\Models\LeaveType;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-class FitnessTestsTable
+class LeaveTypesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('date', 'desc')
             ->columns([
-                TextColumn::make('date')
-                    ->date('m/d/Y')
+                TextColumn::make('name')
+                    ->searchable()
                     ->sortable(),
-                TextColumn::make('score')
+                TextColumn::make('description')
+                    ->limit(25)
+                    ->searchable()
                     ->sortable()
-                    ->suffix('%'),
-                IconColumn::make('passed')
+                    ->tooltip(fn (LeaveType $record): string => $record->description),
+                IconColumn::make('active')
                     ->boolean()
-                    ->sortable(),
-                TextColumn::make('inputter.display_name')
-                    ->label('Input By')
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('created_at')
@@ -49,7 +48,7 @@ class FitnessTestsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                ViewAction::make(),
+                EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

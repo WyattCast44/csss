@@ -17,10 +17,10 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Section;
-use Filament\Support\Icons\Heroicon;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
 
 class ManageProfilePage extends Page implements HasSchemas
@@ -62,8 +62,8 @@ class ManageProfilePage extends Page implements HasSchemas
     {
         return Action::make('save')
             ->label('Save Changes')
-            ->disabled(fn() => $this->form->isDisabled())
-            ->action(fn() => $this->submit());
+            ->disabled(fn () => $this->form->isDisabled())
+            ->action(fn () => $this->submit());
     }
 
     public function form(Schema $schema): Schema
@@ -118,6 +118,7 @@ class ManageProfilePage extends Page implements HasSchemas
                                         ->label('Nickname')
                                         ->nullable(),
                                     TextInput::make('personal_phone')
+                                        ->mask('(999) 999-9999')
                                         ->label('Personal Phone')
                                         ->nullable()
                                         ->tel(),
@@ -182,11 +183,11 @@ class ManageProfilePage extends Page implements HasSchemas
                                     $this->getSaveAction(),
                                 ]),
                         ])->grow(true),
-                ])->from('sm')
+                ])->from('sm'),
             ])
             ->statePath('data');
     }
-    
+
     public function submit(): void
     {
         /** @var User $user */

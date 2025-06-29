@@ -71,10 +71,6 @@ class EditOrganizationPage extends EditTenantProfile
                     ->nullable()
                     ->searchable()
                     ->preload(),
-                TextInput::make('description')
-                    ->nullable()
-                    ->maxLength(1000)
-                    ->columnSpanFull(),
             ]);
     }
 }

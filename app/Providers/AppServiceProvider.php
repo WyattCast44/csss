@@ -18,6 +18,8 @@ use App\Models\GlobalTraining;
 use App\Models\InboundUser;
 use App\Models\InboundUserInprocessingAction;
 use App\Models\InprocessingAction;
+use App\Models\LeaveRequest;
+use App\Models\LeaveType;
 use App\Models\Organization;
 use App\Models\OrganizationCommand;
 use App\Models\OrganizationLevel;
@@ -68,9 +70,11 @@ class AppServiceProvider extends ServiceProvider
             'base' => Base::class,
             'branch' => Branch::class,
             'building' => Building::class,
+            'leave_type' => LeaveType::class,
             'fitness_test' => FitnessTest::class,
             'inbound_user' => InboundUser::class,
             'organization' => Organization::class,
+            'leave_request' => LeaveRequest::class,
             'outbound_user' => OutboundUser::class,
             'attached_user' => AttachedUser::class,
             'training_format' => TrainingFormat::class,

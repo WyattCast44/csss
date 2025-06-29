@@ -2,16 +2,15 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\Register;
+use App\Filament\Personal\Pages\ManageProfilePage;
 use App\Http\Middleware\ScopePersonalPanelQueries;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -35,7 +34,6 @@ class PersonalPanelServiceProvider extends PanelProvider
             ->configurePanelStyling($panel)
             ->configureDiscovery($panel)
             ->configureAuthenticationFeatures($panel)
-            ->configureTenancy($panel)
             ->configureMiddleware($panel)
             ->configureNavigationGroups($panel)
             ->configureDeveloperTools($panel)
@@ -53,7 +51,7 @@ class PersonalPanelServiceProvider extends PanelProvider
             ->spa();
 
         $panel->pages([
-            Dashboard::class,
+            ManageProfilePage::class,
         ]);
 
         return $this;
@@ -113,17 +111,7 @@ class PersonalPanelServiceProvider extends PanelProvider
             ->login()
             ->registration(Register::class)
             ->passwordReset()
-            ->login(Login::class)
-            ->profile(EditProfile::class, isSimple: true);
-
-        return $this;
-    }
-
-    private function configureTenancy(Panel $panel): self
-    {
-        // don't really need tenancy for personal panel
-        // this panel will only be used for personal records
-        // and will not be shared with other users
+            ->login(Login::class);
 
         return $this;
     }

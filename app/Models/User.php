@@ -205,6 +205,11 @@ class User extends Authenticatable implements FilamentUser, HasName, HasTenants
         return $this->hasMany(PendingFitnessTest::class);
     }
 
+    public function leaveRequests(): HasMany
+    {
+        return $this->hasMany(LeaveRequest::class);
+    }
+
     public function organizations(): BelongsToMany
     {
         return $this->belongsToMany(Organization::class)->withTimestamps();

@@ -84,7 +84,7 @@ class FitnessTestForm
                     ]),
                 Section::make('Component Results')
                     ->collapsible()
-                    ->collapsed(fn(string $operation) => $operation != 'create')
+                    ->collapsed(fn (string $operation) => $operation != 'create')
                     ->columnSpanFull()
                     ->schema([
                         Repeater::make('results')
@@ -116,7 +116,7 @@ class FitnessTestForm
                     ]),
                 Section::make('Attachments')
                     ->collapsible()
-                    ->collapsed(fn(string $operation) => $operation != 'create')
+                    ->collapsed(fn (string $operation) => $operation != 'create')
                     ->columnSpanFull()
                     ->schema([
                         FileUpload::make('attachments')
