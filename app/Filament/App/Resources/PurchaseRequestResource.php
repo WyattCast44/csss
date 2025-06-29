@@ -23,6 +23,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Filament\Support\RawJs;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
@@ -54,22 +55,30 @@ class PurchaseRequestResource extends Resource
                 TextInput::make('quantity')
                     ->numeric()
                     ->required()
-                    ->live(onBlur: true),
-                TextInput::make('unit_price')
-                    ->numeric()
-                    ->required()
-                    ->prefix('$')
-                    ->live(onBlur: true),
-                TextInput::make('est_total_price')
-                    ->numeric()
-                    ->disabled()
-                    ->prefix('$')
-                    ->live()
+                    ->live(onBlur: true)
                     ->afterStateUpdated(function (Get $get, Set $set) {
                         if ($get('unit_price') && $get('quantity')) {
                             $set('est_total_price', $get('unit_price') * $get('quantity'));
                         }
                     }),
+                TextInput::make('unit_price')
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->numeric()
+                    ->required()
+                    ->prefix('$')
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function (Get $get, Set $set) {
+                        if ($get('unit_price') && $get('quantity')) {
+                            $set('est_total_price', $get('unit_price') * $get('quantity'));
+                        }
+                    }),
+                TextInput::make('est_total_price')
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->numeric()
+                    ->disabled()
+                    ->prefix('$'),
                 TextInput::make('money_source')
                     ->required(),
                 TextInput::make('link')

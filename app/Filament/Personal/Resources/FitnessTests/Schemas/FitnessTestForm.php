@@ -43,7 +43,7 @@ class FitnessTestForm
                             ->helperText('Where the test was administered'),
                         DatePicker::make('next_test_date')
                             ->label('Next Due Date')
-                            ->helperText('The date your request to retest, based on the test results')
+                            ->helperText('The due date of your next test')
                             ->required()
                             ->minDate(now()->addDays(1))
                             ->maxDate(now()->addYears(2))
@@ -84,7 +84,7 @@ class FitnessTestForm
                     ]),
                 Section::make('Component Results')
                     ->collapsible()
-                    ->collapsed()
+                    ->collapsed(fn(string $operation) => $operation != 'create')
                     ->columnSpanFull()
                     ->schema([
                         Repeater::make('results')
@@ -116,7 +116,7 @@ class FitnessTestForm
                     ]),
                 Section::make('Attachments')
                     ->collapsible()
-                    ->collapsed()
+                    ->collapsed(fn(string $operation) => $operation != 'create')
                     ->columnSpanFull()
                     ->schema([
                         FileUpload::make('attachments')
