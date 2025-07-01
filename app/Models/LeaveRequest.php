@@ -60,25 +60,7 @@ class LeaveRequest extends Model
     public static function booted(): void
     {
         static::creating(function (LeaveRequest $leaveRequest) {
-            try {
-                if ($leaveRequest->start_date < $leaveRequest->end_date) {
-                    // If the start date is before the end date, calculate the duration
-                    $duration = abs($leaveRequest->end_date->diffInDays($leaveRequest->start_date));
-                } elseif ($leaveRequest->start_date == $leaveRequest->end_date) {
-                    // If the start date is the same as the end date, set the duration to 1
-                    $duration = 1;
-                } elseif ($leaveRequest->start_date > $leaveRequest->end_date) {
-                    // If the start date is after the end date, set the duration to 0
-                    $duration = 0;
-                } else {
-                    // If the start date is not a date, set the duration to 0
-                    $duration = 0;
-                }
-            } catch (\Exception $e) {
-                $duration = 0;
-            }
-
-            $leaveRequest->duration = $duration;
+            $leaveRequest->duration = self::calculateDuration($leaveRequest);
 
             if ($leaveRequest->requires_approval) {
                 $leaveRequest->approved = false;
@@ -109,5 +91,33 @@ class LeaveRequest extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /*
+    |-------------------------------------
+    | Helpers
+    |-------------------------------------
+    */
+    public static function calculateDuration(LeaveRequest $leaveRequest): int
+    {
+        try {
+            if ($leaveRequest->start_date < $leaveRequest->end_date) {
+                // If the start date is before the end date, calculate the duration
+                $duration = abs($leaveRequest->end_date->diffInDays($leaveRequest->start_date));
+            } elseif ($leaveRequest->start_date == $leaveRequest->end_date) {
+                // If the start date is the same as the end date, set the duration to 1
+                $duration = 1;
+            } elseif ($leaveRequest->start_date > $leaveRequest->end_date) {
+                // If the start date is after the end date, set the duration to 0
+                $duration = 0;
+            } else {
+                // If the start date is not a date, set the duration to 0
+                $duration = 0;
+            }
+        } catch (\Exception $e) {
+            $duration = 0;
+        }
+
+        return $duration;
     }
 }

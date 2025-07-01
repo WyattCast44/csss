@@ -6,8 +6,8 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\FusedGroup;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
 class LeaveRequestForm
@@ -43,15 +43,19 @@ class LeaveRequestForm
                         ->default('17:00')
                         ->seconds(false),
                 ])->label('Leave End'),
-                Toggle::make('requires_approval')
-                    ->required()
-                    ->default(true)
-                    ->inline(false),
-                Select::make('route_to')
-                    ->relationship('routeTo', 'display_name')
-                    ->nullable()
-                    ->searchable()
-                    ->preload(),
+                FusedGroup::make([
+                    Select::make('requires_approval')
+                        ->required()
+                        ->live()
+                        ->boolean('Yes', 'No'),
+                    Select::make('route_to')
+                        ->disabled(fn (Get $get): bool => $get('requires_approval') === 'false')
+                        ->relationship('routeTo', 'display_name')
+                        ->nullable()
+                        ->searchable()
+                        ->preload()
+                        ->columnSpan(2),
+                ])->label('Approval Required')->columns(3),
             ]);
     }
 }

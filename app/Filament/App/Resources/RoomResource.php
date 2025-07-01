@@ -2,6 +2,7 @@
 
 namespace App\Filament\App\Resources;
 
+use App\Filament\App\Resources\BuildingResource\RelationManagers\RoomsRelationManager;
 use App\Filament\App\Resources\RoomResource\Pages\CreateRoom;
 use App\Filament\App\Resources\RoomResource\Pages\EditRoom;
 use App\Filament\App\Resources\RoomResource\Pages\ListRooms;
@@ -20,7 +21,9 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RoomResource extends Resource
@@ -30,6 +33,18 @@ class RoomResource extends Resource
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-squares-2x2';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Infrastructure';
+
+    protected static ?string $navigationParentItem = 'Buildings';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['number', 'name', 'building.name'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return 'Room #' . $record->number . ' - ' . $record->name;
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -111,7 +126,7 @@ class RoomResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RoomsRelationManager::class,
         ];
     }
 

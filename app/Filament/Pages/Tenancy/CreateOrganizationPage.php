@@ -35,8 +35,6 @@ class CreateOrganizationPage extends RegisterTenant
         $organization = Organization::create([
             'name' => $data['name'],
             'abbr' => $data['abbr'],
-            'slug' => str($data['abbr'])->slug(),
-            'description' => $data['description'],
             'personal' => false,
             'approved' => true,
         ]);

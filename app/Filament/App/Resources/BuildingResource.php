@@ -5,6 +5,8 @@ namespace App\Filament\App\Resources;
 use App\Filament\App\Resources\BuildingResource\Pages\CreateBuilding;
 use App\Filament\App\Resources\BuildingResource\Pages\EditBuilding;
 use App\Filament\App\Resources\BuildingResource\Pages\ListBuildings;
+use App\Filament\App\Resources\BuildingResource\Pages\ViewBuilding;
+use App\Filament\App\Resources\BuildingResource\RelationManagers\RoomsRelationManager;
 use App\Models\Building;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -100,7 +102,7 @@ class BuildingResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RoomsRelationManager::class,
         ];
     }
 
@@ -110,6 +112,7 @@ class BuildingResource extends Resource
             'index' => ListBuildings::route('/'),
             'create' => CreateBuilding::route('/create'),
             'edit' => EditBuilding::route('/{record}/edit'),
+            'view' => ViewBuilding::route('/{record}'),
         ];
     }
 

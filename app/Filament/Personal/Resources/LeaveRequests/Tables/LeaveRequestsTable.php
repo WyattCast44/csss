@@ -41,7 +41,6 @@ class LeaveRequestsTable
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('type.name')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('notes')
