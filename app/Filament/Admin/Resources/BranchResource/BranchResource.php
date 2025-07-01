@@ -45,4 +45,4 @@ class BranchResource extends Resource
             'edit' => EditBranch::route('/{record}/edit'),
         ];
     }
-} 
+}

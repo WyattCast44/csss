@@ -27,4 +27,4 @@ class RankForm
                     ->required(),
             ]);
     }
-} 
+}

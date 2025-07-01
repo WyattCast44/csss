@@ -24,4 +24,4 @@ class OrganizationCommandForm
                     ->relationship('branch', 'name'),
             ]);
     }
-} 
+}

@@ -55,4 +55,4 @@ class OrganizationLevelResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
-} 
+}

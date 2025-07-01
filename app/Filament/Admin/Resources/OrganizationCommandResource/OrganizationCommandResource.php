@@ -48,4 +48,4 @@ class OrganizationCommandResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
-} 
+}

@@ -21,7 +21,6 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
-use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -43,7 +42,7 @@ class RoomResource extends Resource
 
     public static function getGlobalSearchResultTitle(Model $record): string
     {
-        return 'Room #' . $record->number . ' - ' . $record->name;
+        return 'Room #'.$record->number.' - '.$record->name;
     }
 
     public static function form(Schema $schema): Schema

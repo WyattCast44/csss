@@ -55,4 +55,4 @@ class GlobalTrainingResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
-} 
+}

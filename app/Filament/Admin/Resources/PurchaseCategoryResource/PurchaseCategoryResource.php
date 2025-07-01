@@ -48,4 +48,4 @@ class PurchaseCategoryResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
-} 
+}

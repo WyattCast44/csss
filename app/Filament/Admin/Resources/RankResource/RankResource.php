@@ -55,4 +55,4 @@ class RankResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
-} 
+}

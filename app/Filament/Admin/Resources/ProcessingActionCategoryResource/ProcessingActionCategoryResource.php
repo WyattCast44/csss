@@ -57,4 +57,4 @@ class ProcessingActionCategoryResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
-} 
+}

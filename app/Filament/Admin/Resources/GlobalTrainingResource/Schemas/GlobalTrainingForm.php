@@ -57,4 +57,4 @@ class GlobalTrainingForm
                     ->helperText('If this training is available to users, set this to active. Otherwise, set this to inactive. If it is active, users will see this training in the search results.'),
             ]);
     }
-} 
+}

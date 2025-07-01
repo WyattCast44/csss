@@ -22,4 +22,4 @@ class ProcessingActionCategoryForm
                     ->helperText('If no organization is selected, the category will be global.'),
             ]);
     }
-} 
+}

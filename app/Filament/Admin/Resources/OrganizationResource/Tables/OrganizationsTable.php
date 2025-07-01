@@ -101,4 +101,4 @@ class OrganizationsTable
             ])
             ->defaultSort('created_at', 'desc');
     }
-} 
+}

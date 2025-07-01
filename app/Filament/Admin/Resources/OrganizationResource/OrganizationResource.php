@@ -6,7 +6,6 @@ use App\Filament\Admin\Resources\OrganizationResource\Pages\CreateOrganization;
 use App\Filament\Admin\Resources\OrganizationResource\Pages\EditOrganization;
 use App\Filament\Admin\Resources\OrganizationResource\Pages\ListOrganizations;
 use App\Filament\Admin\Resources\OrganizationResource\Pages\ViewOrganization;
-use App\Filament\Admin\Resources\OrganizationResource\RelationManagers\ChildrenRelationManager;
 use App\Filament\Admin\Resources\OrganizationResource\Schemas\OrganizationForm;
 use App\Filament\Admin\Resources\OrganizationResource\Tables\OrganizationsTable;
 use App\Models\Organization;
@@ -56,4 +55,4 @@ class OrganizationResource extends Resource
                 SoftDeletingScope::class,
             ])->shared();
     }
-} 
+}

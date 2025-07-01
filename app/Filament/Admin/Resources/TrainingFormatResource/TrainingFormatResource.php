@@ -55,4 +55,4 @@ class TrainingFormatResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
-} 
+}

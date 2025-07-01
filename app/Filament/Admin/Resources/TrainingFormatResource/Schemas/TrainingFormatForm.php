@@ -22,4 +22,4 @@ class TrainingFormatForm
                     ->columnSpanFull(),
             ]);
     }
-} 
+}

@@ -7,7 +7,6 @@ use App\Filament\Personal\Resources\FitnessTests\Pages\EditFitnessTest;
 use App\Filament\Personal\Resources\FitnessTests\Pages\ListFitnessTests;
 use App\Filament\Personal\Resources\FitnessTests\Pages\ViewFitnessTest;
 use App\Filament\Personal\Resources\FitnessTests\Schemas\FitnessTestForm;
-use App\Filament\Personal\Resources\FitnessTests\Schemas\FitnessTestInfolist;
 use App\Filament\Personal\Resources\FitnessTests\Tables\FitnessTestsTable;
 use App\Models\FitnessTest;
 use BackedEnum;
@@ -28,7 +27,7 @@ class FitnessTestResource extends Resource
     {
         return FitnessTestForm::configure($schema);
     }
-    
+
     public static function table(Table $table): Table
     {
         return FitnessTestsTable::configure($table);
