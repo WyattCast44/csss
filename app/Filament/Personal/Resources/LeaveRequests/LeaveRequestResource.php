@@ -14,15 +14,12 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class LeaveRequestResource extends Resource
 {
     protected static ?string $model = LeaveRequest::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
-
-    protected static string|\UnitEnum|null $navigationGroup = 'Leave';
 
     public static function form(Schema $schema): Schema
     {
@@ -46,15 +43,11 @@ class LeaveRequestResource extends Resource
         return [
             'index' => ListLeaveRequests::route('/'),
             'create' => CreateLeaveRequest::route('/create'),
-            'edit' => EditLeaveRequest::route('/{record}/edit'),
         ];
     }
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
+        return parent::getEloquentQuery();
     }
 }

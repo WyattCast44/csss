@@ -90,7 +90,8 @@ class PersonalPanelServiceProvider extends PanelProvider
             ->favicon(asset('logo-dark.png'))
             ->brandLogo(fn () => view('filament.logos.light'))
             ->darkModeBrandLogo(fn () => view('filament.logos.dark'))
-            ->brandLogoHeight('2rem');
+            ->brandLogoHeight('2rem')
+            ->viteTheme('resources/css/filament/theme.css');
 
         return $this;
     }

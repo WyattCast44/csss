@@ -2,13 +2,13 @@
 
 namespace App\Filament\Personal\Resources\LeaveRequests\Tables;
 
+use App\Enums\LeaveStatus;
 use App\Models\LeaveRequest;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -47,10 +47,18 @@ class LeaveRequestsTable
                     ->limit(25)
                     ->tooltip(fn (LeaveRequest $record): string => $record->notes)
                     ->toggleable(isToggledHiddenByDefault: true),
-                IconColumn::make('approved')
-                    ->boolean()
+                TextColumn::make('status')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->badge()
+                    ->color(fn (LeaveStatus $state): string => match ($state) {
+                        LeaveStatus::PENDING => 'warning',
+                        LeaveStatus::APPROVED => 'success',
+                        LeaveStatus::REJECTED => 'danger',
+                        LeaveStatus::CANCELLED => 'danger',
+                        LeaveStatus::COMPLETED => 'success',
+                    })
+                    ->formatStateUsing(fn (LeaveStatus $state): string => $state->label()),
                 TextColumn::make('approved_at')
                     ->dateTime('m/d/Y h:i A')
                     ->sortable()
@@ -76,7 +84,8 @@ class LeaveRequestsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                EditAction::make(),
+                ViewAction::make()
+                    ->slideOver(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\LeaveStatus;
 use App\Support\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,7 @@ class LeaveRequest extends Model
         'approved',
         'approved_at',
         'approved_by',
+        'status',
     ];
 
     protected $casts = [
@@ -50,6 +52,7 @@ class LeaveRequest extends Model
         'approved' => 'boolean',
         'approved_at' => 'datetime',
         'approved_by' => 'integer',
+        'status' => LeaveStatus::class,
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -64,6 +67,10 @@ class LeaveRequest extends Model
 
             if ($leaveRequest->requires_approval) {
                 $leaveRequest->approved = false;
+                $leaveRequest->status = LeaveStatus::PENDING;
+            } else {
+                $leaveRequest->approved = true;
+                $leaveRequest->status = LeaveStatus::APPROVED;
             }
         });
     }

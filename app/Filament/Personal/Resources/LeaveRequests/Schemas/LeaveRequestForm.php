@@ -2,6 +2,7 @@
 
 namespace App\Filament\Personal\Resources\LeaveRequests\Schemas;
 
+use App\Enums\LeaveStatus;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -9,6 +10,7 @@ use Filament\Forms\Components\TimePicker;
 use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Operation;
 
 class LeaveRequestForm
 {
@@ -56,6 +58,10 @@ class LeaveRequestForm
                         ->preload()
                         ->columnSpan(2),
                 ])->label('Approval Required')->columns(3),
+                Select::make('status')
+                    ->options(LeaveStatus::class)
+                    ->required()
+                    ->hiddenOn(Operation::Create),
             ]);
     }
 }
