@@ -28,12 +28,7 @@ class FitnessTestResource extends Resource
     {
         return FitnessTestForm::configure($schema);
     }
-
-    public static function infolist(Schema $schema): Schema
-    {
-        return FitnessTestInfolist::configure($schema);
-    }
-
+    
     public static function table(Table $table): Table
     {
         return FitnessTestsTable::configure($table);

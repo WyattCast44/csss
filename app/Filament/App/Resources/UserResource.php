@@ -97,7 +97,6 @@ class UserResource extends Resource
     {
         return $schema
             ->components([
-
                 TextInput::make('dodid')
                     ->label('DOD ID')
                     ->nullable()

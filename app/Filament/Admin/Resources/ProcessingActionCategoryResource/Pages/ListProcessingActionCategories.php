@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\ProcessingActionCategoryResource\Pages;
 
-use App\Filament\Admin\Resources\ProcessingActionCategoryResource;
+use App\Filament\Admin\Resources\ProcessingActionCategoryResource\ProcessingActionCategoryResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\OrganizationResource\Pages;
 
-use App\Filament\Admin\Resources\OrganizationResource;
+use App\Filament\Admin\Resources\OrganizationResource\OrganizationResource;
 use App\Filament\Admin\Resources\OrganizationResource\RelationManagers\ChildrenRelationManager;
 use Filament\Actions\EditAction;
 use Filament\Infolists\Components\TextEntry;
@@ -14,7 +14,7 @@ class ViewOrganization extends ViewRecord
 {
     protected static string $resource = OrganizationResource::class;
 
-    public function infolist(Schema $schema): Schema
+    public function infolist(Schema $infolist): Schema
     {
         return $infolist
             ->schema([
@@ -24,10 +24,19 @@ class ViewOrganization extends ViewRecord
                     ->schema([
                         TextEntry::make('name'),
                         TextEntry::make('abbr'),
-                        TextEntry::make('branch.abbr'),
-                        TextEntry::make('level.name'),
-                        TextEntry::make('command.abbr'),
-                    ]),
+                        TextEntry::make('branch.abbr')
+                            ->label('Branch')
+                            ->default('Not set'),
+                        TextEntry::make('level.name')
+                            ->label('Level')
+                            ->default('Not set'),
+                        TextEntry::make('command.abbr')
+                            ->label('Command')
+                            ->default('Not set'),
+                        TextEntry::make('parent.name')
+                            ->label('Parent')
+                            ->default('Not set'),
+                    ])->columnSpanFull(),
             ]);
     }
 

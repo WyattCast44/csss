@@ -73,7 +73,7 @@ class Register extends \Filament\Auth\Pages\Register
     {
         return Select::make('branch_id')
             ->label('Branch')
-            ->options(Branch::all()->pluck('name', 'id'))
+            ->options(Branch::select('name', 'id')->get()->pluck('name', 'id'))
             ->required();
     }
 

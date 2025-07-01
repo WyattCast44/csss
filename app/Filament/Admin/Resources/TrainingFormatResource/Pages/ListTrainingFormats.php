@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\TrainingFormatResource\Pages;
 
-use App\Filament\Admin\Resources\TrainingFormatResource;
+use App\Filament\Admin\Resources\TrainingFormatResource\TrainingFormatResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

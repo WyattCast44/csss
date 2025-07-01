@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\OrganizationResource\Pages;
 
-use App\Filament\Admin\Resources\OrganizationResource;
+use App\Filament\Admin\Resources\OrganizationResource\OrganizationResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateOrganization extends CreateRecord

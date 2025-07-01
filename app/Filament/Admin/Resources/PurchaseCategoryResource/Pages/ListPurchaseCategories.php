@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\PurchaseCategoryResource\Pages;
 
-use App\Filament\Admin\Resources\PurchaseCategoryResource;
+use App\Filament\Admin\Resources\PurchaseCategoryResource\PurchaseCategoryResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

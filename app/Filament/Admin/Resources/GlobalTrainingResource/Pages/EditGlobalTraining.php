@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\GlobalTrainingResource\Pages;
 
-use App\Filament\Admin\Resources\GlobalTrainingResource;
+use App\Filament\Admin\Resources\GlobalTrainingResource\GlobalTrainingResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;

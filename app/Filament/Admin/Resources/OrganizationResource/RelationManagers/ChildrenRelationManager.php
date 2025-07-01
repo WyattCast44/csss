@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\OrganizationResource\RelationManagers;
 
-use App\Filament\Admin\Resources\OrganizationResource;
+use App\Filament\Admin\Resources\OrganizationResource\OrganizationResource;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\OrganizationCommandResource\Pages;
 
-use App\Filament\Admin\Resources\OrganizationCommandResource;
+use App\Filament\Admin\Resources\OrganizationCommandResource\OrganizationCommandResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;

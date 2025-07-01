@@ -239,7 +239,7 @@ class User extends Authenticatable implements FilamentUser, HasName, HasTenants
     */
     private function createPersonalOrganization(): Organization
     {
-        $name = $this->first_name ? $this->first_name : $this->last_name ?? $this->name;
+        $name = $this->first_name ? $this->first_name : $this->last_name;
 
         $teamName = $name.'\'s Personal Org';
         $teamAbbr = $name.'\'s Org';

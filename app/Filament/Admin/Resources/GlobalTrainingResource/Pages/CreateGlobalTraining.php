@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\GlobalTrainingResource\Pages;
 
-use App\Filament\Admin\Resources\GlobalTrainingResource;
+use App\Filament\Admin\Resources\GlobalTrainingResource\GlobalTrainingResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateGlobalTraining extends CreateRecord

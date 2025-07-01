@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\BaseResource\Pages;
 
-use App\Filament\Admin\Resources\BaseResource;
+use App\Filament\Admin\Resources\BaseResource\BaseResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;

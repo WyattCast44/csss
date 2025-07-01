@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\OrganizationLevelResource\Pages;
 
-use App\Filament\Admin\Resources\OrganizationLevelResource;
+use App\Filament\Admin\Resources\OrganizationLevelResource\OrganizationLevelResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
